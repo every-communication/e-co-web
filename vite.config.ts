@@ -1,4 +1,4 @@
-import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
 import path from "path";

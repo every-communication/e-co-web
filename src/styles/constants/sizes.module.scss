@@ -1,0 +1,7 @@
+/* stylelint-disable property-no-unknown */
+/* stylelint-disable selector-pseudo-class-no-unknown */
+$S_EXAMPLE: 1000px;
+
+:export {
+	example: $S_EXAMPLE;
+}

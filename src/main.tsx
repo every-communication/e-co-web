@@ -5,7 +5,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { createRoot } from "react-dom/client";
 
 import { routeTree } from "./routeTree.gen";
-import "./index.scss";
+import "@/styles/global.scss";
 
 declare module "@tanstack/react-router" {
 	interface Register {

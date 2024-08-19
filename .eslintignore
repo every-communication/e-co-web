@@ -1,0 +1,5 @@
+/build
+/node_modules
+routeTree.gen.ts
+commitlint.config.js
+lint-staged.config.js

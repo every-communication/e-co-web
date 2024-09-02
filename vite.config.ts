@@ -20,9 +20,16 @@ export default defineConfig(({ mode }) => {
 		},
 		server: {
 			port: parseInt(env.VITE_PORT),
+			watch: {
+				usePolling: true,
+			},
+			strictPort: true,
+			host: true,
 		},
 		preview: {
 			port: parseInt(env.VITE_PORT),
+			strictPort: true,
+			host: true,
 		},
 		css: {
 			devSourcemap: true,

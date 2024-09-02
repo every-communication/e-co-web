@@ -1,0 +1,88 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+$CLOSE_BUTTON_SIZE: 16px;
+
+.wrapper {
+	@include m.flex(flex-start, flex-start, column);
+	gap: 8px;
+
+	.label {
+		@include m.fontLabel1Normal("medium");
+		color: var(--c-label-normal);
+	}
+
+	.inputWrapper {
+		position: relative;
+		width: 100%;
+
+		.input {
+			@include m.fontLabel1Normal("regular");
+			display: inline-block;
+			width: 100%;
+			padding: 10px 16px;
+			color: var(--c-label-normal);
+			background-color: var(--c-background-normal-normal);
+			border: 1px solid var(--c-line-normal-normal);
+			border-radius: 4px;
+			outline: none;
+
+			&::placeholder {
+				opacity: 0.35;
+			}
+
+			&:placeholder-shown {
+				& + .closeButton {
+					display: none;
+				}
+			}
+		}
+
+		.closeButton {
+			@include m.absolute(50% 16px auto auto);
+			width: $CLOSE_BUTTON_SIZE;
+			height: $CLOSE_BUTTON_SIZE;
+			cursor: pointer;
+			transform: translateY(-50%);
+
+			&::before {
+				@include m.posCenter;
+				width: 1px;
+				height: $CLOSE_BUTTON_SIZE;
+				content: "";
+				background-color: var(--c-label-normal);
+				transform: translate(-50%, -50%) rotate(45deg);
+			}
+
+			&::after {
+				@include m.posCenter;
+				width: 1px;
+				height: $CLOSE_BUTTON_SIZE;
+				content: "";
+				background-color: var(--c-label-normal);
+				transform: translate(-50%, -50%) rotate(-45deg);
+			}
+		}
+	}
+
+	.helpText {
+		@include m.fontCaption1("regular");
+		color: var(--c-label-alternative);
+	}
+
+	&[aria-disabled="true"] {
+		cursor: not-allowed;
+
+		.label {
+			color: var(--c-label-assistive);
+		}
+
+		.input {
+			background-color: var(--c-background-elevated-alternative);
+		}
+
+		.helpText {
+			color: var(--c-interaction-inactive);
+		}
+	}
+}

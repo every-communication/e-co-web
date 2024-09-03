@@ -1,0 +1,43 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+@mixin _large {
+	@include m.fontBody1Normal("bold");
+	padding: 12px 28px;
+	border-radius: 8px;
+}
+
+@mixin _medium {
+	@include m.fontBody2Normal("bold");
+	padding: 9px 20px;
+	border-radius: 5px;
+}
+
+@mixin _small {
+	@include m.fontLabel2("bold");
+	padding: 7px 14px;
+	border-radius: 4px;
+}
+
+.wrapper {
+	position: relative;
+	color: var(--c-static-white);
+	background-color: var(--c-primary-normal);
+
+	&.small {
+		@include _small;
+	}
+
+	&.medium {
+		@include _medium;
+	}
+
+	&.large {
+		@include _large;
+	}
+
+	&:disabled {
+		color: var(--c-label-assistive);
+		background-color: var(--c-interaction-disable);
+	}
+}

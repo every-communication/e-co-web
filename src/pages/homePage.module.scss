@@ -2,7 +2,8 @@
 @use "src/styles/mixins" as m;
 
 .wrapper {
-	@include m.flex;
+	@include m.flex(center, center, column);
+	gap: 24px;
 	width: 100%;
 	min-height: 100vh;
 

@@ -1,7 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Navigate } from "@tanstack/react-router";
 
-import HomePage from "@/pages";
-
+// TODO: authorization check
 export const Route = createFileRoute("/")({
-	component: () => <HomePage />,
+	component: () => <Navigate to="/auth" />,
 });

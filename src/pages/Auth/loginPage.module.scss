@@ -1,0 +1,42 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+$FORM_WIDTH: 650px;
+
+.wrapper {
+	@include m.flex;
+	background-color: var(--c-background-normal-alternative);
+
+	.loginForm {
+		@include m.flex(flex-start, center, column);
+		gap: 20px;
+		width: $FORM_WIDTH;
+		padding: 40px 100px;
+		background-color: var(--c-background-normal-normal);
+		box-shadow: var(--c-shadow-heavy);
+
+		@include m.mobileOnly {
+			width: 100%;
+			padding: 0 24px;
+			background-color: var(--c-background-normal-alternative);
+			box-shadow: none;
+		}
+
+		.logo {
+			width: 80px;
+			height: 40px;
+			object-fit: contain;
+		}
+
+		.form {
+			@include m.flex(flex-start, center, column);
+			gap: 32px;
+			width: 100%;
+			padding: 20px 0;
+
+			.input {
+				width: 100%;
+			}
+		}
+	}
+}

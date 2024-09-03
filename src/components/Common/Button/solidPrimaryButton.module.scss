@@ -36,6 +36,10 @@
 		@include _large;
 	}
 
+	&.fill {
+		width: 100%;
+	}
+
 	&:disabled {
 		color: var(--c-label-assistive);
 		background-color: var(--c-interaction-disable);

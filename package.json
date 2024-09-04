@@ -10,6 +10,7 @@
 		"dev": "vite",
 		"build:prod": "tsc -b && vite build",
 		"build:dev": "tsc -b && vite build --mode development",
+		"start": "vite preview",
 		"lint": "eslint .",
 		"preview": "vite preview",
 		"eslint:fix": "eslint --fix --ext .ts,.tsx .",

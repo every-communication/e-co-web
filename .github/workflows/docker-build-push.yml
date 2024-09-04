@@ -1,8 +1,9 @@
 name: Build and Push Docker Image
 
+permissions: write-all
 on:
   push:
-    branches: [main]
+    branches: [release/*]
 
 jobs:
   build-and-push:

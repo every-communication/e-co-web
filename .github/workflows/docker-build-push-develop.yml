@@ -43,13 +43,10 @@ jobs:
       - name: Build React app
         run: pnpm run build:dev
 
-      - name: Create .env file
+      - name: Create .env.development file
         run: |
-          echo "Creating .env.${NODE_ENV} file"
-          cat <<EOF > ./env/.env.${NODE_ENV}
-          VITE_API_URL=${{ secrets.VITE_API_URL }}
-          VITE_PORT=${{ secrets.VITE_PORT }}
-          EOF
+          echo "VITE_PORT=${{ secrets.VITE_PORT }}" >> ${{ github.workspace }}/env/.env.development
+          echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> ${{ github.workspace }}/env/.env.development
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2

@@ -1,14 +1,15 @@
 {
 	"name": "e-co-web",
 	"private": true,
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"type": "module",
 	"engines": {
 		"node": "20.13.1"
 	},
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc -b && vite build",
+		"build:prod": "tsc -b && vite build",
+		"build:dev": "tsc -b && vite build --mode development",
 		"lint": "eslint .",
 		"preview": "vite preview",
 		"eslint:fix": "eslint --fix --ext .ts,.tsx .",

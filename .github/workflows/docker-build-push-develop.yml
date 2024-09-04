@@ -41,7 +41,7 @@ jobs:
         run: pnpm install
 
       - name: Build React app
-        run: pnpm run build:develop
+        run: pnpm run build:dev
 
       - name: Create .env file
         run: |

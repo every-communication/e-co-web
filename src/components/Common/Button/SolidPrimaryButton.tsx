@@ -24,7 +24,7 @@ const SolidPrimaryButton: React.FC<Props> = ({ type, size, className, children, 
 			{...props}
 		>
 			{children}
-			<Interaction backgroundColor="--c-label-normal" variant="strong" />
+			<Interaction backgroundColor="--c-label-normal" variant="strong" disabled={disabled} />
 		</button>
 	);
 };

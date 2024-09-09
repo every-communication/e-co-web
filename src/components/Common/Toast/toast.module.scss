@@ -7,12 +7,18 @@ $CLOSE_BUTTON_SIZE: 16px;
 $CLOSE_BUTTON_LINE_WIDTH: calc(1px * math.sqrt(2));
 $CLOSE_BUTTON_LINE_HEIGHT: calc(10px * math.sqrt(2));
 
+$MOBILE_GAP: 12px;
+
 .wrapper {
 	@include m.flex(flex-start, flex-start, column);
 	width: 100%;
 	min-width: 320px;
 	max-width: 800px;
 	transition: all 0.3s;
+
+	@include m.mobileOnly {
+		min-width: calc(100vw - $MOBILE_GAP * 2);
+	}
 
 	.toast {
 		@include m.flex(flex-start);
@@ -27,6 +33,10 @@ $CLOSE_BUTTON_LINE_HEIGHT: calc(10px * math.sqrt(2));
 		transition: all 0.2s;
 		transform: scale(0.8);
 
+		@include m.mobileOnly {
+			padding: 16px 16px 16px 24px;
+		}
+
 		.icon {
 			margin-right: 8px;
 		}
@@ -36,6 +46,10 @@ $CLOSE_BUTTON_LINE_HEIGHT: calc(10px * math.sqrt(2));
 			@include m.makeEllipsis(2);
 			flex: 1;
 			padding-right: 20px;
+
+			@include m.mobileOnly {
+				@include m.fontLabel1Normal("regular");
+			}
 		}
 
 		.closeButton {

@@ -1,0 +1,30 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+@mixin _medium {
+	@include m.fontBody1Normal("bold");
+	padding: 4px 7px;
+}
+
+@mixin _small {
+	@include m.fontLabel1Normal("bold");
+	padding: 4px 6px;
+}
+
+.wrapper {
+	position: relative;
+	color: var(--c-label-alternative);
+	border-radius: 5px;
+
+	&.small {
+		@include _small;
+	}
+
+	&.medium {
+		@include _medium;
+	}
+
+	&:disabled {
+		color: var(--c-label-disable);
+	}
+}

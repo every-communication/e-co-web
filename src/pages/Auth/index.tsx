@@ -2,10 +2,12 @@ import { type MouseEventHandler, useId } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Link } from "@tanstack/react-router";
 
 import { imageLogo } from "@/assets/images";
 import type { UserSignInDTO } from "@/common/types/auth";
 import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
+import TextAssistiveButton from "@/components/Common/Button/TextAssistiveButton";
 import Input from "@/components/Common/Input";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
 import { useToast } from "@/hooks";
@@ -76,6 +78,11 @@ const LoginPage: React.FC = () => {
 				<SolidPrimaryButton type="submit" form={formId} size="large" fill disabled={!isValid || isSubmitting}>
 					로그인
 				</SolidPrimaryButton>
+				<Link>
+					<TextAssistiveButton size="medium" type="button">
+						회원가입 하기
+					</TextAssistiveButton>
+				</Link>
 			</main>
 		</HeightFitLayout>
 	);

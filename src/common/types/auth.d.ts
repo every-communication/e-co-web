@@ -9,7 +9,6 @@ export interface UserSignInDTO {
 export interface LoginResponseDTO {
 	accessToken: string;
 	refreshToken: string;
-	message: string;
 }
 
 export interface UserSignUpDTO {

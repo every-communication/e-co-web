@@ -8,6 +8,7 @@ interface Props extends ComponentProps<"input"> {
 	inputClassName?: string;
 	label?: string;
 	helpText?: string;
+	errorMessage?: string;
 	onClickClearButton?: MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -21,7 +22,9 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, Props> = (
 		inputMode,
 		label,
 		helpText,
+		errorMessage,
 		onClickClearButton,
+		name,
 		...props
 	},
 	ref,
@@ -40,6 +43,7 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, Props> = (
 				<input
 					id={id}
 					ref={ref}
+					name={name}
 					type={type}
 					placeholder={placeholder}
 					disabled={disabled}
@@ -50,14 +54,20 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, Props> = (
 				/>
 				<button
 					type="button"
+					name={name}
 					aria-label="Clear Input Button"
 					className={styles.closeButton}
 					onClick={onClickClearButton}
 				/>
 			</div>
-			{helpText && (
+			{!errorMessage && helpText && (
 				<span className={styles.helpText} id={helpTextId}>
 					{helpText}
+				</span>
+			)}
+			{errorMessage && (
+				<span className={styles.errorMessage} id={helpTextId}>
+					{errorMessage}
 				</span>
 			)}
 		</label>

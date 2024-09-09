@@ -71,6 +71,11 @@ $CLOSE_BUTTON_SIZE: 16px;
 		color: var(--c-label-alternative);
 	}
 
+	.errorMessage {
+		@include m.fontCaption1("regular");
+		color: var(--c-status-negative);
+	}
+
 	&[aria-disabled="true"] {
 		cursor: not-allowed;
 

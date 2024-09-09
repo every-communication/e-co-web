@@ -1,4 +1,4 @@
-import { MouseEventHandler, useId } from "react";
+import { type MouseEventHandler, useId } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,12 +10,12 @@ import Input from "@/components/Common/Input";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
 import { useToast } from "@/hooks";
 import { useSignInMutation } from "@/queries/auth/mutations";
+import { getKyHTTPError, isKyHTTPError } from "@/services/apiClient";
 
 import { loginSchema, type LoginSchema } from "./validator";
 
 import styles from "./loginPage.module.scss";
 
-// TODO: 로그인 에러 처리
 // TODO: Bearer 토큰 저장
 const LoginPage: React.FC = () => {
 	const formId = useId();
@@ -30,7 +30,14 @@ const LoginPage: React.FC = () => {
 	const { mutateAsync: signIn } = useSignInMutation();
 
 	const onSubmit: SubmitHandler<UserSignInDTO> = async (data) => {
-		await signIn(data, { onError: (error) => addToast({ state: "negative", message: error.message }) });
+		try {
+			const { accessToken, refreshToken } = await signIn(data);
+		} catch (err) {
+			if (isKyHTTPError(err)) {
+				const { message } = await getKyHTTPError(err);
+				addToast({ state: "negative", message });
+			}
+		}
 	};
 
 	const onClickClear: MouseEventHandler<HTMLButtonElement> = (e) => {

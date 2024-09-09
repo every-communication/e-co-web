@@ -28,5 +28,5 @@ docker pull ghcr.io/every-communication/e-co-web
 실행 이후 localhost:3000을 통해 접근 가능하다.
 
 ```sh
-docker run -d -p 3000:3000 --name e-co-web ghcr.io/every-communication/e-co-we
+docker run -d -p 3000:3000 --name e-co-web ghcr.io/every-communication/e-co-web
 ```

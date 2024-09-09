@@ -17,9 +17,14 @@ const SolidPrimaryButton: React.FC<Props> = ({ type, size, className, children, 
 	console.assert(Boolean(type), "Button type을 명시해주세요.");
 
 	return (
-		<button type={type} className={cx(styles.wrapper, className, styles[size], { [styles.fill]: fill })} {...props}>
+		<button
+			type={type}
+			className={cx(styles.wrapper, className, styles[size], { [styles.fill]: fill })}
+			disabled={disabled}
+			{...props}
+		>
 			{children}
-			<Interaction backgroundColor="--c-label-normal" variant="strong" />
+			<Interaction backgroundColor="--c-label-normal" variant="strong" disabled={disabled} />
 		</button>
 	);
 };

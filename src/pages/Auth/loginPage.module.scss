@@ -12,12 +12,13 @@ $FORM_WIDTH: 650px;
 		gap: 20px;
 		width: $FORM_WIDTH;
 		padding: 40px 100px;
+		margin: auto;
 		background-color: var(--c-background-normal-normal);
 		box-shadow: var(--c-shadow-heavy);
 
 		@include m.mobileOnly {
 			width: 100%;
-			padding: 0 24px;
+			padding: 24px;
 			background-color: var(--c-background-normal-alternative);
 			box-shadow: none;
 		}

@@ -20,6 +20,7 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, Props> = (
 		disabled,
 		type,
 		inputMode,
+		required,
 		label,
 		helpText,
 		errorMessage,
@@ -38,13 +39,14 @@ const Input: ForwardRefRenderFunction<HTMLInputElement, Props> = (
 
 	return (
 		<label className={cx(styles.wrapper, className)} htmlFor={id} aria-disabled={disabled}>
-			{label && <span className={styles.label}>{label}</span>}
+			{label && <span className={cx(styles.label, { [styles.required]: required })}>{label}</span>}
 			<div className={styles.inputWrapper}>
 				<input
 					id={id}
 					ref={ref}
 					name={name}
 					type={type}
+					required={required}
 					placeholder={placeholder}
 					disabled={disabled}
 					inputMode={inputMode}

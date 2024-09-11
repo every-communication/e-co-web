@@ -5,36 +5,45 @@
 	@include m.flex;
 	background-color: var(--c-background-normal-alternative);
 
-	.loginForm {
+	.registerForm {
 		@include m.flex(flex-start, center, column);
-		gap: 20px;
+		gap: 40px;
 		width: c.$S_AUTH_FORM_WIDTH;
 		padding: 40px 100px;
-		margin: auto;
 		background-color: var(--c-background-normal-normal);
 		box-shadow: var(--c-shadow-heavy);
 
-		@include m.mobileOnly {
-			width: 100%;
-			padding: 24px;
-			background-color: var(--c-background-normal-alternative);
-			box-shadow: none;
-		}
-
-		.logo {
-			width: 80px;
-			height: 40px;
-			object-fit: contain;
+		.title {
+			@include m.fontTitle2("bold");
+			color: var(--c-label-normal);
 		}
 
 		.form {
 			@include m.flex(flex-start, center, column);
-			gap: 32px;
+			gap: 12px;
 			width: 100%;
-			padding: 20px 0;
 
 			.input {
 				width: 100%;
+			}
+
+			.userTypeCheckerWrapper {
+				width: 100%;
+
+				.legend {
+					@include m.fontLabel1Normal("medium");
+					margin-bottom: 8px;
+					color: var(--c-label-normal);
+
+					&::after {
+						margin-left: 4px;
+						content: "*";
+					}
+				}
+			}
+
+			.registerButton {
+				margin-top: 40px;
 			}
 		}
 	}

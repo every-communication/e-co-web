@@ -1,18 +1,10 @@
-import type { UserType } from "./uesrs";
-
-export interface UserSignInDTO {
-	email: string;
-	password: string;
-}
+import type { UserDTO } from "./uesrs";
 
 export interface TokenDTO {
 	accessToken: string;
 	refreshToken: string;
 }
 
-export interface UserSignUpDTO {
-	email: string;
-	password: string;
-	nickname: string;
-	userType: UserType;
-}
+export interface UserSignInDTO extends Pick<UserDTO, "email" | "password"> {}
+
+export interface UserSignUpDTO extends Pick<UserDTO, "email" | "password" | "nickname" | "userType"> {}

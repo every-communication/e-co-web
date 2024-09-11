@@ -12,6 +12,7 @@ export interface UserDTO {
 	nickname: string;
 	thumbnail: string;
 	role: UserRole;
+	/** DEAF: 농인 / NODEAF: 청인 */
 	userType: UserType;
 	socialType: SocialType;
 	socialId: string;

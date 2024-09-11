@@ -83,9 +83,11 @@ const LoginPage: React.FC = () => {
 				<SolidPrimaryButton type="submit" form={formId} size="large" fill disabled={!isValid || isSubmitting}>
 					로그인
 				</SolidPrimaryButton>
-				<TextAssistiveButton size="medium" type="button">
-					회원가입 하기
-				</TextAssistiveButton>
+				<Link to="/auth/register">
+					<TextAssistiveButton size="medium" type="button">
+						회원가입 하기
+					</TextAssistiveButton>
+				</Link>
 			</main>
 		</HeightFitLayout>
 	);

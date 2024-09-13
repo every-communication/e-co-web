@@ -4,7 +4,7 @@ import cx from "clsx";
 
 import { imageDefaultAvatar } from "@/assets/images";
 
-import styles from "./Avatar.module.scss";
+import styles from "./avatar.module.scss";
 
 interface Props {
 	size: number;

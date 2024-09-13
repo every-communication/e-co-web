@@ -1,8 +1,6 @@
 @use "src/styles/constants" as c;
 @use "src/styles/mixins" as m;
 
-$FORM_WIDTH: 650px;
-
 .wrapper {
 	@include m.flex;
 	background-color: var(--c-background-normal-alternative);
@@ -10,7 +8,7 @@ $FORM_WIDTH: 650px;
 	.loginForm {
 		@include m.flex(flex-start, center, column);
 		gap: 20px;
-		width: $FORM_WIDTH;
+		width: c.$S_AUTH_FORM_WIDTH;
 		padding: 40px 100px;
 		margin: auto;
 		background-color: var(--c-background-normal-normal);

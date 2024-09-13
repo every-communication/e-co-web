@@ -1,19 +1,10 @@
-/** DEAF: 농인 / NODEAF: 청인 */
-export type UserType = "DEAF" | "NODEAF";
+import type { UserDTO } from "./uesrs";
 
-export interface UserSignInDTO {
-	email: string;
-	password: string;
-}
-
-export interface LoginResponseDTO {
+export interface TokenDTO {
 	accessToken: string;
 	refreshToken: string;
 }
 
-export interface UserSignUpDTO {
-	email: string;
-	password: string;
-	nickname: string;
-	userType: UserType;
-}
+export interface UserSignInDTO extends Pick<UserDTO, "email" | "password"> {}
+
+export interface UserSignUpDTO extends Pick<UserDTO, "email" | "password" | "nickname" | "userType"> {}

@@ -1,0 +1,28 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex(flex-start, flex-start, column);
+	gap: 8px;
+	width: 100%;
+	padding: 10px 20px;
+	cursor: pointer;
+	border: 2px solid var(--c-inverse-label);
+	border-radius: 4px;
+
+	&:has(input:checked) {
+		padding-left: calc(20px - 16px + 2px);
+		border-color: var(--c-primary-normal);
+		border-left-width: 16px;
+	}
+
+	.title {
+		@include m.fontLabel1Normal("bold");
+		color: var(--c-label-strong);
+	}
+
+	.desc {
+		@include m.fontCaption1("regular");
+		color: var(--c-label-neutral);
+	}
+}

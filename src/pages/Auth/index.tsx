@@ -5,14 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 
 import { imageLogo } from "@/assets/images";
-import type { UserSignInDTO } from "@/common/types/auth";
 import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
 import TextAssistiveButton from "@/components/Common/Button/TextAssistiveButton";
 import Input from "@/components/Common/Input";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
-import { useToast } from "@/hooks";
+import { useMe, useToast } from "@/hooks";
 import { useSignInMutation } from "@/queries/auth/mutations";
 import { getKyHTTPError, isKyHTTPError } from "@/services/apiClient";
+import { setTokens } from "@/utils/token";
 
 import { loginSchema, type LoginSchema } from "./validator";
 
@@ -21,6 +21,7 @@ import styles from "./loginPage.module.scss";
 // TODO: Bearer 토큰 저장
 const LoginPage: React.FC = () => {
 	const formId = useId();
+	const { refetchMe } = useMe();
 	const { addToast } = useToast();
 
 	const {
@@ -29,11 +30,14 @@ const LoginPage: React.FC = () => {
 		setValue,
 		formState: { errors, isValid, isSubmitting },
 	} = useForm<LoginSchema>({ mode: "onTouched", resolver: zodResolver(loginSchema) });
+
 	const { mutateAsync: signIn } = useSignInMutation();
 
-	const onSubmit: SubmitHandler<UserSignInDTO> = async (data) => {
+	const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
 		try {
-			const { accessToken, refreshToken } = await signIn(data);
+			const { data: tokens } = await signIn(data);
+			setTokens(tokens);
+			await refetchMe();
 		} catch (err) {
 			if (isKyHTTPError(err)) {
 				const { message } = await getKyHTTPError(err);
@@ -78,9 +82,11 @@ const LoginPage: React.FC = () => {
 				<SolidPrimaryButton type="submit" form={formId} size="large" fill disabled={!isValid || isSubmitting}>
 					로그인
 				</SolidPrimaryButton>
-				<TextAssistiveButton size="medium" type="button">
-					회원가입 하기
-				</TextAssistiveButton>
+				<Link to="/auth/register">
+					<TextAssistiveButton size="medium" type="button">
+						회원가입 하기
+					</TextAssistiveButton>
+				</Link>
 			</main>
 		</HeightFitLayout>
 	);

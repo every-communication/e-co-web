@@ -10,6 +10,11 @@ $CLOSE_BUTTON_SIZE: 16px;
 	.label {
 		@include m.fontLabel1Normal("medium");
 		color: var(--c-label-normal);
+
+		&.required::after {
+			margin-left: 2px;
+			content: "*";
+		}
 	}
 
 	.inputWrapper {

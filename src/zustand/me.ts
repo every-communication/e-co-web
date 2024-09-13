@@ -2,15 +2,15 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import { STORAGE_ME_KEY } from "@/common/constants/storage";
-import type { UserDTO } from "@/common/types/uesrs";
+import type { UserInfoDTO } from "@/common/types/users";
 
 interface State {
 	isLogined: boolean;
-	me: UserDTO | null;
+	me: UserInfoDTO | null;
 }
 
 interface Action {
-	setMe: (me: UserDTO) => void;
+	setMe: (me: UserInfoDTO) => void;
 	clear: () => void;
 }
 

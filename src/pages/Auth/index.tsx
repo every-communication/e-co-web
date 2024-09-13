@@ -9,6 +9,7 @@ import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
 import TextAssistiveButton from "@/components/Common/Button/TextAssistiveButton";
 import Input from "@/components/Common/Input";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
+import config from "@/config";
 import { useMe, useToast } from "@/hooks";
 import { useSignInMutation } from "@/queries/auth/mutations";
 import { getKyHTTPError, isKyHTTPError } from "@/services/apiClient";
@@ -46,6 +47,11 @@ const LoginPage: React.FC = () => {
 		}
 	};
 
+	// FIXME: remove
+	const onClickKakao = () => {
+		window.open(`${config.API_URL}/auth/kakao`, "_blank");
+	};
+
 	const onClickClear: MouseEventHandler<HTMLButtonElement> = (e) => {
 		const name = e.currentTarget.name as keyof LoginSchema;
 		setValue(name, "", { shouldValidate: true });
@@ -79,6 +85,9 @@ const LoginPage: React.FC = () => {
 						{...register("password")}
 					/>
 				</form>
+				<button type="button" onClick={onClickKakao}>
+					카카오 로그인
+				</button>
 				<SolidPrimaryButton type="submit" form={formId} size="large" fill disabled={!isValid || isSubmitting}>
 					로그인
 				</SolidPrimaryButton>

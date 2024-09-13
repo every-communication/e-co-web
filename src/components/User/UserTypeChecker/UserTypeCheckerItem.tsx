@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 
-import type { UserType } from "@/common/types/uesrs";
+import type { UserType } from "@/common/types/users";
 
 import styles from "./userTypeCheckerItem.module.scss";
 

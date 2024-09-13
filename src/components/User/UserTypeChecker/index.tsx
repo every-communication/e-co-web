@@ -2,7 +2,7 @@ import type { ChangeEventHandler } from "react";
 
 import cx from "clsx";
 
-import type { UserType } from "@/common/types/uesrs";
+import type { UserType } from "@/common/types/users";
 
 import UserTypeCheckerItem from "./UserTypeCheckerItem";
 

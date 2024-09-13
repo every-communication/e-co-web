@@ -9,9 +9,38 @@
 		@include m.flex(flex-start, center, column);
 		gap: 40px;
 		width: c.$S_AUTH_FORM_WIDTH;
-		padding: 40px 100px;
+		padding: 0 100px;
 		background-color: var(--c-background-normal-normal);
 		box-shadow: var(--c-shadow-heavy);
+
+		@include m.mobileOnly {
+			width: 100%;
+			padding: 24px;
+			padding-top: 0;
+			padding-bottom: 80px;
+			margin-bottom: auto;
+			background-color: var(--c-background-normal-alternative);
+			box-shadow: none;
+		}
+
+		.header {
+			@include m.flex;
+			position: relative;
+			width: 100%;
+			padding: 20px 0;
+
+			@include m.mobileOnly {
+				position: sticky;
+				top: 0;
+				z-index: 1;
+				background-color: var(--c-background-normal-alternative);
+			}
+
+			.backButton {
+				@include m.posCenterY;
+				left: 0;
+			}
+		}
 
 		.title {
 			@include m.fontTitle2("bold");
@@ -22,6 +51,7 @@
 			@include m.flex(flex-start, center, column);
 			gap: 12px;
 			width: 100%;
+			padding-bottom: 20px;
 
 			.input {
 				width: 100%;
@@ -42,8 +72,16 @@
 				}
 			}
 
-			.registerButton {
+			.registerButtonWrapper {
+				width: 100%;
 				margin-top: 40px;
+				background-color: var(--c-background-normal-alternative);
+
+				@include m.mobileOnly {
+					@include m.fixed(auto auto 0 auto);
+					padding: 24px;
+					margin-top: 0;
+				}
 			}
 		}
 	}

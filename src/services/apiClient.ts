@@ -15,11 +15,7 @@ export const authApiClient = apiClient.extend({
 		beforeRequest: [
 			(request) => {
 				const { accessToken, refreshToken } = getTokens();
-				if (!accessToken || !refreshToken) {
-					window.dispatchEvent(new CustomEvent(LOGOUT_EVENT_NAME));
-					return;
-				}
-
+				if (!accessToken || !refreshToken) void window.dispatchEvent(new CustomEvent(LOGOUT_EVENT_NAME));
 				request.headers.set("Authorization", `Bearer ${accessToken}`);
 				return request;
 			},

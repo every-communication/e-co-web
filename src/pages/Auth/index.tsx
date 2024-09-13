@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 
 import { imageLogo } from "@/assets/images";
-import type { UserSignInDTO } from "@/common/types/auth";
 import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
 import TextAssistiveButton from "@/components/Common/Button/TextAssistiveButton";
 import Input from "@/components/Common/Input";
@@ -25,8 +24,6 @@ const LoginPage: React.FC = () => {
 	const { refetchMe } = useMe();
 	const { addToast } = useToast();
 
-	const { mutateAsync: signIn } = useSignInMutation();
-
 	const {
 		register,
 		handleSubmit,
@@ -34,7 +31,9 @@ const LoginPage: React.FC = () => {
 		formState: { errors, isValid, isSubmitting },
 	} = useForm<LoginSchema>({ mode: "onTouched", resolver: zodResolver(loginSchema) });
 
-	const onSubmit: SubmitHandler<UserSignInDTO> = async (data) => {
+	const { mutateAsync: signIn } = useSignInMutation();
+
+	const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
 		try {
 			const { data: tokens } = await signIn(data);
 			setTokens(tokens);

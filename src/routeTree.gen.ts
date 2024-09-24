@@ -15,12 +15,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as AuthOauthRegisterImport } from './routes/auth/oauth-register'
 
 // Create Virtual Routes
 
 const AuthIndexLazyImport = createFileRoute('/auth/')()
 const AuthRegisterLazyImport = createFileRoute('/auth/register')()
-const AuthOauthRegisterLazyImport = createFileRoute('/auth/oauth-register')()
 
 // Create/Update Routes
 
@@ -44,12 +44,10 @@ const AuthRegisterLazyRoute = AuthRegisterLazyImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() => import('./routes/auth/register.lazy').then((d) => d.Route))
 
-const AuthOauthRegisterLazyRoute = AuthOauthRegisterLazyImport.update({
+const AuthOauthRegisterRoute = AuthOauthRegisterImport.update({
   path: '/oauth-register',
   getParentRoute: () => AuthRouteRoute,
-} as any).lazy(() =>
-  import('./routes/auth/oauth-register.lazy').then((d) => d.Route),
-)
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -73,7 +71,7 @@ declare module '@tanstack/react-router' {
       id: '/auth/oauth-register'
       path: '/oauth-register'
       fullPath: '/auth/oauth-register'
-      preLoaderRoute: typeof AuthOauthRegisterLazyImport
+      preLoaderRoute: typeof AuthOauthRegisterImport
       parentRoute: typeof AuthRouteImport
     }
     '/auth/register': {
@@ -98,7 +96,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AuthRouteRoute: AuthRouteRoute.addChildren({
-    AuthOauthRegisterLazyRoute,
+    AuthOauthRegisterRoute,
     AuthRegisterLazyRoute,
     AuthIndexLazyRoute,
   }),
@@ -128,7 +126,7 @@ export const routeTree = rootRoute.addChildren({
       ]
     },
     "/auth/oauth-register": {
-      "filePath": "auth/oauth-register.lazy.tsx",
+      "filePath": "auth/oauth-register.tsx",
       "parent": "/auth"
     },
     "/auth/register": {

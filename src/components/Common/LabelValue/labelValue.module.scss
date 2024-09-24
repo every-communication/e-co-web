@@ -1,0 +1,18 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex(flex-start, flex-start, column);
+	gap: 8px;
+	width: 100%;
+
+	.label {
+		@include m.fontLabel1Normal("medium");
+		color: var(--c-label-normal);
+	}
+
+	.value {
+		@include m.fontBody1Normal("regular");
+		color: var(--c-label-alternative);
+	}
+}

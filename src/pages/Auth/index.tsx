@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
 
 	const onClickOAuth: MouseEventHandler<HTMLButtonElement> = (e) => {
 		const oauth = e.currentTarget.dataset.oauth as Exclude<SocialType, "ECO">;
-		window.open(`${config.API_URL}/auth/${oauth}`, "_blank");
+		window.open(`${config.API_URL}/auth/${oauth}`, "_self");
 	};
 
 	return (
@@ -94,9 +94,6 @@ const LoginPage: React.FC = () => {
 				<div className={styles.oauthWrapper}>
 					<IconButton type="button" className={styles.kakao} data-oauth="kakao" onClick={onClickOAuth}>
 						<IconKakao />
-					</IconButton>
-					<IconButton type="button" className={styles.naver} data-oauth="naver" onClick={onClickOAuth}>
-						<img src={imageNaver} alt="네이버 로그인" className={styles.naverImage} />
 					</IconButton>
 					<IconButton type="button" className={styles.google} data-oauth="google" onClick={onClickOAuth}>
 						<img src={imageGoogle} alt="구글 로그인" className={styles.googleImage} />

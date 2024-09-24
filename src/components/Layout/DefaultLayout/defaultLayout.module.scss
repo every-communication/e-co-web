@@ -1,0 +1,12 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	width: 100%;
+	min-height: 100dvh;
+	padding-top: c.$S_DEFAULT_HEADER_DESKTOP_HEIGHT;
+
+	@include m.mobileOnly {
+		padding-top: c.$S_DEFAULT_HEADER_MOBILE_HEIGHT;
+	}
+}

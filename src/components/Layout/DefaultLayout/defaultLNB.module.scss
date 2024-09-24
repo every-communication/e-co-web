@@ -1,0 +1,51 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.fixed(auto auto 0 0);
+	z-index: c.$Z_LNB;
+	width: c.$S_DEFAULT_LNB_WIDTH;
+	height: calc(100dvh - c.$S_DEFAULT_HEADER_DESKTOP_HEIGHT);
+	background-color: var(--c-background-normal-normal);
+	box-shadow: var(--c-shadow-normal);
+
+	@include m.mobileOnly {
+		display: none;
+	}
+
+	.userInfoWrapper {
+		@include m.flex(flex-start, center, column);
+		gap: 24px;
+		width: 100%;
+		padding: 20px 0;
+
+		.info {
+			@include m.flex(flex-start, center, column);
+			gap: 4px;
+			width: 100%;
+
+			.name {
+				@include m.fontHeadline1("bold");
+				color: var(--c-label-normal);
+			}
+
+			.email {
+				@include m.fontLabel1Normal("regular");
+				color: var(--c-label-assistive);
+			}
+
+			.userType {
+				@include m.fontLabel1Normal("bold");
+				color: var(--c-inverse-primary);
+			}
+		}
+	}
+
+	.divider {
+		width: calc(100% - 2 * 12px);
+		height: 1px;
+		margin: 0 12px;
+		background-color: var(--c-line-normal-neutral);
+		border: 0;
+	}
+}

@@ -1,11 +1,16 @@
 @use "src/styles/constants" as c;
 @use "src/styles/mixins" as m;
 
+$HORIZON_PADDING: 12px;
+
 .wrapper {
 	@include m.fixed(auto auto 0 0);
+	@include m.flex(flex-start, flex-start, column);
 	z-index: c.$Z_LNB;
 	width: c.$S_DEFAULT_LNB_WIDTH;
 	height: calc(100dvh - c.$S_DEFAULT_HEADER_DESKTOP_HEIGHT);
+	padding: 10px $HORIZON_PADDING;
+	overflow-y: scroll;
 	background-color: var(--c-background-normal-normal);
 	box-shadow: var(--c-shadow-normal);
 
@@ -17,7 +22,7 @@
 		@include m.flex(flex-start, center, column);
 		gap: 24px;
 		width: 100%;
-		padding: 20px;
+		padding: 10px;
 
 		.info {
 			@include m.flex(flex-start, center, column);
@@ -47,10 +52,41 @@
 		}
 	}
 
+	.nav {
+		@include m.flex(flex-start, center, column);
+		flex: 1;
+		gap: 10px;
+		width: 100%;
+		padding: 10px 0;
+
+		.item {
+			@include m.fontLabel1Normal("regular");
+			position: relative;
+			width: 100%;
+			padding: 8px 20px;
+			color: var(--c-label-normal);
+			text-align: left;
+
+			&.active {
+				@include m.fontLabel1Normal("bold");
+				color: var(--c-primary-normal);
+
+				&::before {
+					@include m.absolute(50% auto auto calc(-1 * $HORIZON_PADDING));
+					width: 3px;
+					height: 18px;
+					content: "";
+					background-color: var(--c-primary-normal);
+					border-radius: 0 4px 4px 0;
+					transform: translateY(-50%);
+				}
+			}
+		}
+	}
+
 	.divider {
-		width: calc(100% - 2 * 12px);
+		width: 100%;
 		height: 1px;
-		margin: 0 12px;
 		background-color: var(--c-line-normal-neutral);
 		border: 0;
 	}

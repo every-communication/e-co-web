@@ -14,16 +14,29 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth/route'
+import { Route as AuthRegisterCompleteImport } from './routes/auth/register-complete'
 import { Route as AuthOauthRegisterImport } from './routes/auth/oauth-register'
 import { Route as AuthOauthCallbackImport } from './routes/auth/oauth-callback'
 
 // Create Virtual Routes
 
+const MyPageLazyImport = createFileRoute('/my-page')()
+const FriendsLazyImport = createFileRoute('/friends')()
 const IndexLazyImport = createFileRoute('/')()
 const AuthIndexLazyImport = createFileRoute('/auth/')()
 const AuthRegisterLazyImport = createFileRoute('/auth/register')()
 
 // Create/Update Routes
+
+const MyPageLazyRoute = MyPageLazyImport.update({
+  path: '/my-page',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/my-page.lazy').then((d) => d.Route))
+
+const FriendsLazyRoute = FriendsLazyImport.update({
+  path: '/friends',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/friends.lazy').then((d) => d.Route))
 
 const AuthRouteRoute = AuthRouteImport.update({
   path: '/auth',
@@ -45,6 +58,11 @@ const AuthRegisterLazyRoute = AuthRegisterLazyImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() => import('./routes/auth/register.lazy').then((d) => d.Route))
 
+const AuthRegisterCompleteRoute = AuthRegisterCompleteImport.update({
+  path: '/register-complete',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
 const AuthOauthRegisterRoute = AuthOauthRegisterImport.update({
   path: '/oauth-register',
   getParentRoute: () => AuthRouteRoute,
@@ -53,12 +71,7 @@ const AuthOauthRegisterRoute = AuthOauthRegisterImport.update({
 const AuthOauthCallbackRoute = AuthOauthCallbackImport.update({
   path: '/oauth-callback',
   getParentRoute: () => AuthRouteRoute,
-} as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
-
-const AuthRegisterLazyRoute = AuthRegisterLazyImport.update({
-  path: '/register',
-  getParentRoute: () => AuthRouteRoute,
-} as any).lazy(() => import('./routes/auth/register.lazy').then((d) => d.Route))
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -78,6 +91,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRoute
     }
+    '/friends': {
+      id: '/friends'
+      path: '/friends'
+      fullPath: '/friends'
+      preLoaderRoute: typeof FriendsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/my-page': {
+      id: '/my-page'
+      path: '/my-page'
+      fullPath: '/my-page'
+      preLoaderRoute: typeof MyPageLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/oauth-callback': {
       id: '/auth/oauth-callback'
       path: '/oauth-callback'
@@ -90,6 +117,13 @@ declare module '@tanstack/react-router' {
       path: '/oauth-register'
       fullPath: '/auth/oauth-register'
       preLoaderRoute: typeof AuthOauthRegisterImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/auth/register-complete': {
+      id: '/auth/register-complete'
+      path: '/register-complete'
+      fullPath: '/auth/register-complete'
+      preLoaderRoute: typeof AuthRegisterCompleteImport
       parentRoute: typeof AuthRouteImport
     }
     '/auth/register': {
@@ -116,9 +150,12 @@ export const routeTree = rootRoute.addChildren({
   AuthRouteRoute: AuthRouteRoute.addChildren({
     AuthOauthCallbackRoute,
     AuthOauthRegisterRoute,
+    AuthRegisterCompleteRoute,
     AuthRegisterLazyRoute,
     AuthIndexLazyRoute,
   }),
+  FriendsLazyRoute,
+  MyPageLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -130,7 +167,9 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/auth"
+        "/auth",
+        "/friends",
+        "/my-page"
       ]
     },
     "/": {
@@ -141,9 +180,16 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/auth/oauth-callback",
         "/auth/oauth-register",
+        "/auth/register-complete",
         "/auth/register",
         "/auth/"
       ]
+    },
+    "/friends": {
+      "filePath": "friends.lazy.tsx"
+    },
+    "/my-page": {
+      "filePath": "my-page.lazy.tsx"
     },
     "/auth/oauth-callback": {
       "filePath": "auth/oauth-callback.tsx",
@@ -151,6 +197,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/auth/oauth-register": {
       "filePath": "auth/oauth-register.tsx",
+      "parent": "/auth"
+    },
+    "/auth/register-complete": {
+      "filePath": "auth/register-complete.tsx",
       "parent": "/auth"
     },
     "/auth/register": {

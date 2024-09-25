@@ -1,6 +1,8 @@
 import { useLayoutEffect, useRef } from "react";
 import { useWindowSize } from "react-use";
 
+import { Link } from "@tanstack/react-router";
+
 import { USER_TYPE_MAPPER } from "@/common/constants/user";
 import Avatar from "@/components/Common/Avatar";
 import OutlineAssistiveButton from "@/components/Common/Button/OutlineAssistiveButton";
@@ -9,7 +11,6 @@ import sizes from "@/styles/constants/sizes.module.scss";
 
 import styles from "./defaultLNB.module.scss";
 
-// TODO: LNB ITEM
 const DefaultLNB: React.FC = () => {
 	const asideRef = useRef<HTMLDivElement>(null);
 	const { height } = useWindowSize();
@@ -33,6 +34,17 @@ const DefaultLNB: React.FC = () => {
 				</div>
 			</section>
 			<hr className={styles.divider} />
+			<nav className={styles.nav}>
+				<Link className={styles.item} to="/" activeProps={{ className: styles.active }}>
+					홈
+				</Link>
+				<Link className={styles.item} to="/friends" activeProps={{ className: styles.active }}>
+					친구
+				</Link>
+				<Link className={styles.item} to="/my-page" activeProps={{ className: styles.active }}>
+					마이페이지
+				</Link>
+			</nav>
 			<OutlineAssistiveButton type="button" size="medium" fill onClick={logout}>
 				로그아웃
 			</OutlineAssistiveButton>

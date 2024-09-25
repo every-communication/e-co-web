@@ -50,7 +50,7 @@ const OAuthRegisterPage: React.FC = () => {
 		try {
 			const { data: resultMessage } = await oauthRegister({ id: search.id, ...data });
 			addToast({ state: "positive", message: resultMessage });
-			navigate({ to: "/auth", replace: true });
+			navigate({ to: "/auth/register-complete", replace: true, search: data });
 		} catch (err) {
 			if (isKyHTTPError(err)) {
 				const { message } = await getKyHTTPError(err);

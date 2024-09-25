@@ -46,7 +46,11 @@ const RegisterPage: React.FC = () => {
 		try {
 			const { data: resultMessage } = await signUp(data);
 			addToast({ state: "positive", message: resultMessage });
-			navigate({ to: "/auth", replace: true });
+			navigate({
+				to: "/auth/register-complete",
+				replace: true,
+				search: { nickname: data.nickname, userType: data.userType },
+			});
 		} catch (err) {
 			if (isKyHTTPError(err)) {
 				const { message } = await getKyHTTPError(err);

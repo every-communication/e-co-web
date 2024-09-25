@@ -1,7 +1,7 @@
 import styles from "./defaultBottomNavigator.module.scss";
 
 const DefaultBottomNavigator: React.FC = () => {
-	return <></>;
+	return <aside></aside>;
 };
 
 export default DefaultBottomNavigator;

@@ -4,9 +4,26 @@
 .wrapper {
 	width: 100%;
 	min-height: 100dvh;
-	padding-top: c.$S_DEFAULT_HEADER_DESKTOP_HEIGHT;
+	background-color: var(--c-background-normal-alternative);
+
+	@include m.desktopOnly {
+		padding-top: c.$S_DEFAULT_HEADER_DESKTOP_HEIGHT;
+		padding-left: c.$S_DEFAULT_LNB_WIDTH;
+	}
 
 	@include m.mobileOnly {
 		padding-top: c.$S_DEFAULT_HEADER_MOBILE_HEIGHT;
+	}
+
+	.content {
+		width: 100%;
+
+		@include m.desktopOnly {
+			padding: 28px 40px;
+		}
+
+		@include m.mobileOnly {
+			padding: 24px 16px;
+		}
 	}
 }

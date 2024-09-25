@@ -27,9 +27,9 @@ const UserTypeChecker: React.FC<Props> = ({ userType, className, onChange }) => 
 			<UserTypeCheckerItem
 				title="청인이에요"
 				description="수어 해석이 필요해요"
-				value="NODEAF"
+				value="NONDEAF"
 				onChange={onChange}
-				checked={userType === "NODEAF"}
+				checked={userType === "NONDEAF"}
 			/>
 		</fieldset>
 	);

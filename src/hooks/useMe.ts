@@ -3,7 +3,6 @@ import { useCallback, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import type { UserInfoDTO } from "@/common/types/users";
-import { queries } from "@/queries";
 import { useGetMeQuery } from "@/queries/users/queries";
 import { removeTokens } from "@/utils/token";
 import { useMeStore } from "@/zustand/me";
@@ -20,7 +19,6 @@ interface ReturnUseMe {
 
 const useMe = (): ReturnUseMe => {
 	const queryClient = useQueryClient();
-
 	const { data, refetch, isLoading, isSuccess, isError } = useGetMeQuery();
 	const { me, isLogined, setMe, clear } = useMeStore();
 
@@ -30,7 +28,7 @@ const useMe = (): ReturnUseMe => {
 
 	const logout = useCallback(() => {
 		removeTokens();
-		queryClient.setQueryData(queries.users.getMe.queryKey, null);
+		queryClient.clear();
 		clear();
 	}, [clear, queryClient]);
 

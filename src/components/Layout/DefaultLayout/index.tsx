@@ -4,6 +4,7 @@ import { useWindowSize } from "react-use";
 import DefaultBottomNavigator from "./DefaultBottomNavigator";
 import DefaultHeader from "./DefaultHeader";
 import DefaultLNB from "./DefaultLNB";
+import AfterAuthorizedLayout from "../Authorization/AfterAuthorizedLayout";
 
 import styles from "./defaultLayout.module.scss";
 
@@ -21,14 +22,14 @@ const DefaultLayout: React.FC<Props> = ({ children }) => {
 	}, [height]);
 
 	return (
-		<>
+		<AfterAuthorizedLayout>
 			<div className={styles.wrapper} ref={layoutRef}>
 				<DefaultHeader />
 				<DefaultLNB />
 				<div className={styles.content}>{children}</div>
 			</div>
 			<DefaultBottomNavigator />
-		</>
+		</AfterAuthorizedLayout>
 	);
 };
 

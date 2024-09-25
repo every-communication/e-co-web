@@ -17,7 +17,7 @@
 		@include m.flex(flex-start, center, column);
 		gap: 24px;
 		width: 100%;
-		padding: 20px 0;
+		padding: 20px;
 
 		.info {
 			@include m.flex(flex-start, center, column);
@@ -26,12 +26,18 @@
 
 			.name {
 				@include m.fontHeadline1("bold");
+				@include m.makeEllipsis;
+				width: 100%;
 				color: var(--c-label-normal);
+				text-align: center;
 			}
 
 			.email {
 				@include m.fontLabel1Normal("regular");
+				@include m.makeEllipsis;
+				width: 100%;
 				color: var(--c-label-assistive);
+				text-align: center;
 			}
 
 			.userType {

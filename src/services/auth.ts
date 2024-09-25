@@ -13,8 +13,7 @@ export const signUpApi = (json: UserSignUpDTO) =>
 	apiClient.post<ApiResponseDTO<string>>("auth/sign-up", { json }).json();
 
 /** oauth id 존재 여부 확인 */
-export const checkOAuthIdValidApi = (socialId: string) =>
-	apiClient.get<boolean>("auth/oauth-id-valid", { searchParams: { socialId } }).json();
+export const checkOAuthIdValidApi = (id: string) => apiClient.get<boolean>(`auth/oauth-id-validate/${id}`).json();
 
 /** oauth 로그인 후 추가 정보 기입 */
 export const oauthRegisterApi = ({ id, ...json }: OAuthRegisterDTO) =>

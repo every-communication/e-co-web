@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 
 import { IconKakao } from "@/assets/icons/auth";
-import { imageGoogle, imageLogo, imageNaver } from "@/assets/images";
+import { imageGoogle, imageLogo } from "@/assets/images";
 import { SocialType } from "@/common/types/users";
 import IconButton from "@/components/Common/Button/IconButton";
 import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
@@ -22,7 +22,6 @@ import { loginSchema, type LoginSchema } from "./validator";
 
 import styles from "./loginPage.module.scss";
 
-// TODO: Bearer 토큰 저장
 const LoginPage: React.FC = () => {
 	const formId = useId();
 	const { refetchMe } = useMe();

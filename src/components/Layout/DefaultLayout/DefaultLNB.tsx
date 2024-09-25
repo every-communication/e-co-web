@@ -1,7 +1,10 @@
 import { useLayoutEffect, useRef } from "react";
 import { useWindowSize } from "react-use";
 
+import { USER_TYPE_MAPPER } from "@/common/constants/user";
 import Avatar from "@/components/Common/Avatar";
+import OutlineAssistiveButton from "@/components/Common/Button/OutlineAssistiveButton";
+import { useMe } from "@/hooks";
 import sizes from "@/styles/constants/sizes.module.scss";
 
 import styles from "./defaultLNB.module.scss";
@@ -10,6 +13,8 @@ import styles from "./defaultLNB.module.scss";
 const DefaultLNB: React.FC = () => {
 	const asideRef = useRef<HTMLDivElement>(null);
 	const { height } = useWindowSize();
+
+	const { me, logout } = useMe();
 
 	useLayoutEffect(() => {
 		if (!asideRef.current) return;
@@ -22,12 +27,15 @@ const DefaultLNB: React.FC = () => {
 			<section className={styles.userInfoWrapper}>
 				<Avatar size={80} />
 				<div className={styles.info}>
-					<h2 className={styles.name}>[TODO] 홍길동</h2>
-					<address className={styles.email}>[TODO] test@kakao.com</address>
-					<span className={styles.userType}>[TODO] 농인</span>
+					<h2 className={styles.name}>{me.nickname}</h2>
+					<address className={styles.email}>{me.email}</address>
+					<span className={styles.userType}>{USER_TYPE_MAPPER[me.userType]}</span>
 				</div>
 			</section>
 			<hr className={styles.divider} />
+			<OutlineAssistiveButton type="button" size="medium" fill onClick={logout}>
+				로그아웃
+			</OutlineAssistiveButton>
 		</aside>
 	);
 };

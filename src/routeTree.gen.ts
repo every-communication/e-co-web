@@ -14,10 +14,12 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth/route'
-import { Route as IndexImport } from './routes/index'
+import { Route as AuthOauthRegisterImport } from './routes/auth/oauth-register'
+import { Route as AuthOauthCallbackImport } from './routes/auth/oauth-callback'
 
 // Create Virtual Routes
 
+const IndexLazyImport = createFileRoute('/')()
 const AuthIndexLazyImport = createFileRoute('/auth/')()
 const AuthRegisterLazyImport = createFileRoute('/auth/register')()
 
@@ -28,13 +30,28 @@ const AuthRouteRoute = AuthRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 const AuthIndexLazyRoute = AuthIndexLazyImport.update({
   path: '/',
+  getParentRoute: () => AuthRouteRoute,
+} as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
+
+const AuthRegisterLazyRoute = AuthRegisterLazyImport.update({
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
+} as any).lazy(() => import('./routes/auth/register.lazy').then((d) => d.Route))
+
+const AuthOauthRegisterRoute = AuthOauthRegisterImport.update({
+  path: '/oauth-register',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthOauthCallbackRoute = AuthOauthCallbackImport.update({
+  path: '/oauth-callback',
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
 
@@ -51,7 +68,7 @@ declare module '@tanstack/react-router' {
       id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+      preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
     '/auth': {
@@ -60,6 +77,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/auth/oauth-callback': {
+      id: '/auth/oauth-callback'
+      path: '/oauth-callback'
+      fullPath: '/auth/oauth-callback'
+      preLoaderRoute: typeof AuthOauthCallbackImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/auth/oauth-register': {
+      id: '/auth/oauth-register'
+      path: '/oauth-register'
+      fullPath: '/auth/oauth-register'
+      preLoaderRoute: typeof AuthOauthRegisterImport
+      parentRoute: typeof AuthRouteImport
     }
     '/auth/register': {
       id: '/auth/register'
@@ -81,8 +112,10 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  IndexRoute,
+  IndexLazyRoute,
   AuthRouteRoute: AuthRouteRoute.addChildren({
+    AuthOauthCallbackRoute,
+    AuthOauthRegisterRoute,
     AuthRegisterLazyRoute,
     AuthIndexLazyRoute,
   }),
@@ -101,14 +134,24 @@ export const routeTree = rootRoute.addChildren({
       ]
     },
     "/": {
-      "filePath": "index.tsx"
+      "filePath": "index.lazy.tsx"
     },
     "/auth": {
       "filePath": "auth/route.tsx",
       "children": [
+        "/auth/oauth-callback",
+        "/auth/oauth-register",
         "/auth/register",
         "/auth/"
       ]
+    },
+    "/auth/oauth-callback": {
+      "filePath": "auth/oauth-callback.tsx",
+      "parent": "/auth"
+    },
+    "/auth/oauth-register": {
+      "filePath": "auth/oauth-register.tsx",
+      "parent": "/auth"
     },
     "/auth/register": {
       "filePath": "auth/register.lazy.tsx",

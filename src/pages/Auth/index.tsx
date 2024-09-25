@@ -4,7 +4,10 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@tanstack/react-router";
 
-import { imageLogo } from "@/assets/images";
+import { IconKakao } from "@/assets/icons/auth";
+import { imageGoogle, imageLogo } from "@/assets/images";
+import { SocialType } from "@/common/types/users";
+import IconButton from "@/components/Common/Button/IconButton";
 import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
 import TextAssistiveButton from "@/components/Common/Button/TextAssistiveButton";
 import Input from "@/components/Common/Input";
@@ -19,7 +22,6 @@ import { loginSchema, type LoginSchema } from "./validator";
 
 import styles from "./loginPage.module.scss";
 
-// TODO: Bearer 토큰 저장
 const LoginPage: React.FC = () => {
 	const formId = useId();
 	const { refetchMe } = useMe();
@@ -47,14 +49,14 @@ const LoginPage: React.FC = () => {
 		}
 	};
 
-	// FIXME: remove
-	const onClickKakao = () => {
-		window.open(`${config.API_URL}/auth/kakao`, "_blank");
-	};
-
 	const onClickClear: MouseEventHandler<HTMLButtonElement> = (e) => {
 		const name = e.currentTarget.name as keyof LoginSchema;
 		setValue(name, "", { shouldValidate: true });
+	};
+
+	const onClickOAuth: MouseEventHandler<HTMLButtonElement> = (e) => {
+		const oauth = e.currentTarget.dataset.oauth as Exclude<SocialType, "ECO">;
+		window.open(`${config.API_URL}/auth/${oauth}`, "_self");
 	};
 
 	return (
@@ -85,12 +87,17 @@ const LoginPage: React.FC = () => {
 						{...register("password")}
 					/>
 				</form>
-				<button type="button" onClick={onClickKakao}>
-					카카오 로그인
-				</button>
 				<SolidPrimaryButton type="submit" form={formId} size="large" fill disabled={!isValid || isSubmitting}>
 					로그인
 				</SolidPrimaryButton>
+				<div className={styles.oauthWrapper}>
+					<IconButton type="button" className={styles.kakao} data-oauth="kakao" onClick={onClickOAuth}>
+						<IconKakao />
+					</IconButton>
+					<IconButton type="button" className={styles.google} data-oauth="google" onClick={onClickOAuth}>
+						<img src={imageGoogle} alt="구글 로그인" className={styles.googleImage} />
+					</IconButton>
+				</div>
 				<Link to="/auth/register">
 					<TextAssistiveButton size="medium" type="button">
 						회원가입 하기

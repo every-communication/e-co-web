@@ -13,7 +13,7 @@ const RootLayout: React.FC<Props> = ({ children }) => {
 
 	useLayoutEffect(() => {
 		if (!layoutRef.current) return;
-		if (CSS.supports("min-height: 100dvh")) layoutRef.current.style.minHeight = `${height}px`;
+		if (!CSS.supports("min-height: 100dvh")) layoutRef.current.style.minHeight = `${height}px`;
 	}, [height]);
 
 	return (

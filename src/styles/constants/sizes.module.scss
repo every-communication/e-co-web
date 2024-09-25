@@ -1,7 +1,14 @@
 /* stylelint-disable block-no-empty */
 /* stylelint-disable property-no-unknown */
 /* stylelint-disable selector-pseudo-class-no-unknown */
+// MEMO: AUTH
 $S_AUTH_FORM_WIDTH: 650px;
 
+// MEMO: LAYOUT
+$S_DEFAULT_HEADER_DESKTOP_HEIGHT: 70px;
+$S_DEFAULT_HEADER_MOBILE_HEIGHT: 50px;
+$S_DEFAULT_LNB_WIDTH: 250px;
+
 :export {
+	S_DEFAULT_HEADER_DESKTOP_HEIGHT: $S_DEFAULT_HEADER_DESKTOP_HEIGHT;
 }

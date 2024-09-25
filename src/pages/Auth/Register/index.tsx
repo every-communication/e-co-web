@@ -117,7 +117,7 @@ const RegisterPage: React.FC = () => {
 						{...register("passwordConfirm")}
 					/>
 					<div className={styles.userTypeCheckerWrapper}>
-						<span className={styles.legend}>농인 / 청인</span>
+						<span className={styles.label}>농인 / 청인</span>
 						<Controller
 							name="userType"
 							control={control}

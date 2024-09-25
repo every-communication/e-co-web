@@ -1,0 +1,25 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.fixed(0 0 0 0);
+	z-index: c.$Z_LOADING;
+	background-color: var(--c-material-dimmer);
+
+	&::before {
+		@include m.posCenter;
+		width: 50px;
+		height: 50px;
+		content: "";
+		border: 6px var(--c-primary-normal) solid;
+		border-left-color: var(--c-line-solid-normal);
+		border-radius: 100%;
+		animation: spin 1s infinite linear;
+	}
+}
+
+@keyframes spin {
+	to {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
+}

@@ -1,16 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { signInApi, signUpApi } from "@/services/auth";
+import { oauthRegisterApi, signInApi, signUpApi } from "@/services/auth";
 
 /** 자체 로그인 */
 export const useSignInMutation = () =>
 	useMutation({
 		mutationFn: signInApi,
-		onSuccess: () => {},
 	});
 
+/** 자체 회원가입 */
 export const useSignUpMutation = () =>
 	useMutation({
 		mutationFn: signUpApi,
-		onSuccess: () => {},
+	});
+
+/** oauth 로그인 후 추가 정보 기입 */
+export const useOAuthRegisterMutation = () =>
+	useMutation({
+		mutationFn: oauthRegisterApi,
 	});

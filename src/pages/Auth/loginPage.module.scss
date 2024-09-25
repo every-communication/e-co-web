@@ -9,7 +9,7 @@
 		@include m.flex(flex-start, center, column);
 		gap: 20px;
 		width: c.$S_AUTH_FORM_WIDTH;
-		padding: 40px 100px;
+		padding: 48px 100px;
 		margin: auto;
 		background-color: var(--c-background-normal-normal);
 		box-shadow: var(--c-shadow-heavy);
@@ -23,7 +23,7 @@
 
 		.logo {
 			width: 80px;
-			height: 40px;
+			height: 48px;
 			object-fit: contain;
 		}
 
@@ -35,6 +35,53 @@
 
 			.input {
 				width: 100%;
+			}
+		}
+
+		.oauthWrapper {
+			@include m.flex;
+			gap: 24px;
+			width: 100%;
+			padding: 12px 0;
+
+			.kakao {
+				@include m.flex;
+				gap: 8px;
+				width: 48px;
+				height: 48px;
+				background-color: #fee500;
+				border-radius: 50%;
+			}
+
+			.naver {
+				@include m.fontBody1Normal("bold");
+				@include m.flex;
+				width: 48px;
+				height: 48px;
+				background-color: #03c75a;
+				border-radius: 50%;
+
+				.naverImage {
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+					border-radius: inherit;
+				}
+			}
+
+			.google {
+				@include m.flex;
+				width: 48px;
+				height: 48px;
+				background-color: #ffffff;
+				border: 1px solid var(--c-line-solid-neutral);
+				border-radius: 50%;
+
+				.googleImage {
+					width: 100%;
+					height: 100%;
+					border-radius: inherit;
+				}
 			}
 		}
 	}

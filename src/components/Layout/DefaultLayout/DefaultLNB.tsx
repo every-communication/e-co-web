@@ -3,6 +3,7 @@ import { useWindowSize } from "react-use";
 
 import { Link } from "@tanstack/react-router";
 
+import { FRIENDS_TABS } from "@/common/constants/friends";
 import { USER_TYPE_MAPPER } from "@/common/constants/user";
 import Avatar from "@/components/Common/Avatar";
 import OutlineAssistiveButton from "@/components/Common/Button/OutlineAssistiveButton";
@@ -38,7 +39,13 @@ const DefaultLNB: React.FC = () => {
 				<Link className={styles.item} to="/" activeProps={{ className: styles.active }}>
 					홈
 				</Link>
-				<Link className={styles.item} to="/friends" activeProps={{ className: styles.active }}>
+				<Link
+					className={styles.item}
+					to="/friends"
+					activeOptions={{ includeSearch: false }}
+					activeProps={{ className: styles.active }}
+					search={{ tab: FRIENDS_TABS[0] }}
+				>
 					친구
 				</Link>
 				<Link className={styles.item} to="/my-page" activeProps={{ className: styles.active }}>

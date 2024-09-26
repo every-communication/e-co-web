@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as FriendsImport } from './routes/friends'
 import { Route as AuthRouteImport } from './routes/auth/route'
 import { Route as AuthRegisterCompleteImport } from './routes/auth/register-complete'
 import { Route as AuthOauthRegisterImport } from './routes/auth/oauth-register'
@@ -21,7 +22,6 @@ import { Route as AuthOauthCallbackImport } from './routes/auth/oauth-callback'
 // Create Virtual Routes
 
 const MyPageLazyImport = createFileRoute('/my-page')()
-const FriendsLazyImport = createFileRoute('/friends')()
 const IndexLazyImport = createFileRoute('/')()
 const AuthIndexLazyImport = createFileRoute('/auth/')()
 const AuthRegisterLazyImport = createFileRoute('/auth/register')()
@@ -33,10 +33,10 @@ const MyPageLazyRoute = MyPageLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/my-page.lazy').then((d) => d.Route))
 
-const FriendsLazyRoute = FriendsLazyImport.update({
+const FriendsRoute = FriendsImport.update({
   path: '/friends',
   getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/friends.lazy').then((d) => d.Route))
+} as any)
 
 const AuthRouteRoute = AuthRouteImport.update({
   path: '/auth',
@@ -95,7 +95,7 @@ declare module '@tanstack/react-router' {
       id: '/friends'
       path: '/friends'
       fullPath: '/friends'
-      preLoaderRoute: typeof FriendsLazyImport
+      preLoaderRoute: typeof FriendsImport
       parentRoute: typeof rootRoute
     }
     '/my-page': {
@@ -154,7 +154,7 @@ export const routeTree = rootRoute.addChildren({
     AuthRegisterLazyRoute,
     AuthIndexLazyRoute,
   }),
-  FriendsLazyRoute,
+  FriendsRoute,
   MyPageLazyRoute,
 })
 
@@ -186,7 +186,7 @@ export const routeTree = rootRoute.addChildren({
       ]
     },
     "/friends": {
-      "filePath": "friends.lazy.tsx"
+      "filePath": "friends.tsx"
     },
     "/my-page": {
       "filePath": "my-page.lazy.tsx"

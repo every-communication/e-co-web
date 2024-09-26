@@ -1,0 +1,9 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex(flex-start);
+	gap: 20px;
+	width: 100%;
+	padding: 12px;
+}

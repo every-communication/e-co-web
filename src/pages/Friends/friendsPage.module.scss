@@ -1,0 +1,13 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex(flex-start, flex-start, column);
+	gap: 12px;
+	width: 100%;
+
+	.title {
+		@include m.fontHeadline1("bold");
+		color: var(--c-label-normal);
+	}
+}

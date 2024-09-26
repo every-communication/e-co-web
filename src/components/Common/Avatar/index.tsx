@@ -13,7 +13,7 @@ interface Props {
 }
 
 const Avatar: React.FC<Props> = ({ size, src, className }) => {
-	const style = { "--size": size } as CSSProperties;
+	const style = { "--size": `${size}px` } as CSSProperties;
 
 	const onError: ReactEventHandler<HTMLImageElement> = (e) => {
 		e.currentTarget.src = imageDefaultAvatar;

@@ -36,6 +36,8 @@ export const authApiClient = apiClient.extend({
 							if (!accessToken || !refreshToken) throw new Error();
 
 							if (!promiseHolder.isLocked) {
+								promiseHolder.hold();
+
 								const { data: refreshData, message: refreshMessage } = await ky
 									.post<
 										ApiResponseDTO<TokenDTO>

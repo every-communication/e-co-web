@@ -9,4 +9,8 @@
 	background-color: var(--c-background-normal-normal);
 	border: 1px solid var(--c-line-normal-normal);
 	border-radius: 4px;
+
+	> ul {
+		width: 100%;
+	}
 }

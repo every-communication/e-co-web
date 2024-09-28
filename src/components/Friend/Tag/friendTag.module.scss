@@ -1,0 +1,21 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.fontCaption1("bold");
+	padding: 2px 8px;
+	color: var(--c-background-normal-normal);
+	border-radius: 100px;
+
+	&.friend {
+		background-color: var(--c-accent-light-blue);
+	}
+
+	&.requested {
+		background-color: var(--c-accent-red-orange);
+	}
+
+	&.received {
+		background-color: var(--c-accent-lime);
+	}
+}

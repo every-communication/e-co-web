@@ -6,4 +6,26 @@
 	gap: 20px;
 	width: 100%;
 	padding: 12px;
+
+	.info {
+		@include m.flex(flex-start, flex-start, column);
+		flex: 1;
+		gap: 2px;
+
+		.nameWrapper {
+			@include m.flex(flex-start);
+			gap: 10px;
+			width: 100%;
+
+			.nickname {
+				@include m.fontBody2Normal("bold");
+				color: var(--c-label-normal);
+			}
+		}
+
+		.email {
+			@include m.fontCaption1("regular");
+			color: var(--c-label-alternative);
+		}
+	}
 }

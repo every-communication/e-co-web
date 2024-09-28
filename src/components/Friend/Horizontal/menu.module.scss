@@ -5,15 +5,19 @@
 	@include m.flex;
 	gap: 4px;
 
-	.negative {
-		color: var(--c-status-negative);
-	}
+	> button {
+		white-space: nowrap;
 
-	.redOrange {
-		color: var(--c-accent-red-orange);
-	}
+		&.negative {
+			color: var(--c-status-negative);
+		}
 
-	.positive {
-		color: var(--c-status-positive);
+		&.redOrange {
+			color: var(--c-accent-red-orange);
+		}
+
+		&.positive {
+			color: var(--c-status-positive);
+		}
 	}
 }

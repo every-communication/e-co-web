@@ -19,7 +19,7 @@ export default Content;
 export const LoadingContent: React.FC = () => {
 	return (
 		<section className={styles.wrapper}>
-			{range(5).map((value) => (
+			{range(10).map((value) => (
 				<LoadingHorizontalFriend key={value} />
 			))}
 		</section>

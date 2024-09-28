@@ -5,6 +5,7 @@
 	@include m.fontCaption1("bold");
 	padding: 2px 8px;
 	color: var(--c-background-normal-normal);
+	white-space: nowrap;
 	border-radius: 100px;
 
 	&.friend {

@@ -11,6 +11,7 @@
 		@include m.flex(flex-start, flex-start, column);
 		flex: 1;
 		gap: 2px;
+		overflow: hidden;
 
 		.nameWrapper {
 			@include m.flex(flex-start);
@@ -19,6 +20,7 @@
 
 			.nickname {
 				@include m.fontBody2Normal("bold");
+				@include m.makeEllipsis;
 				color: var(--c-label-normal);
 			}
 		}

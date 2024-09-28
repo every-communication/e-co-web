@@ -16,7 +16,7 @@ const TextPrimaryButton: React.FC<Props> = ({ size, type, className, children, d
 	console.assert(Boolean(type), "Button type을 명시해주세요.");
 
 	return (
-		<button className={cx(styles.wrapper, className, styles[size])} type={type} disabled={disabled} {...props}>
+		<button className={cx(styles.wrapper, styles[size], className)} type={type} disabled={disabled} {...props}>
 			{children}
 			<Interaction backgroundColor="--c-primary-normal" variant="normal" disabled={disabled} />
 		</button>

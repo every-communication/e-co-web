@@ -11,26 +11,26 @@ const Menu: React.FC<Props> = ({ friendType }) => {
 	return (
 		<div className={styles.wrapper}>
 			{friendType === "default" && (
-				<TextPrimaryButton type="button" size="medium">
+				<TextPrimaryButton type="button" size="small">
 					친구 요청
 				</TextPrimaryButton>
 			)}
 			{friendType === "friend" && (
-				<TextPrimaryButton type="button" size="medium" className={styles.negative}>
+				<TextPrimaryButton type="button" size="small" className={styles.negative}>
 					친구 끊기
 				</TextPrimaryButton>
 			)}
 			{friendType === "requested" && (
-				<TextPrimaryButton type="button" size="medium" className={styles.redOrange}>
+				<TextPrimaryButton type="button" size="small" className={styles.redOrange}>
 					요청 취소
 				</TextPrimaryButton>
 			)}
 			{friendType === "received" && (
 				<>
-					<TextPrimaryButton type="button" size="medium" className={styles.positive}>
+					<TextPrimaryButton type="button" size="small" className={styles.positive}>
 						수락
 					</TextPrimaryButton>
-					<TextPrimaryButton type="button" size="medium" className={styles.negative}>
+					<TextPrimaryButton type="button" size="small" className={styles.negative}>
 						거절
 					</TextPrimaryButton>
 				</>

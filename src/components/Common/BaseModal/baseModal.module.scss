@@ -1,0 +1,49 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	min-width: c.$S_MODAL_MIN_WIDTH;
+	padding: 24px;
+	overscroll-behavior: contain;
+	background-color: var(--c-background-normal-normal);
+	border: 1px solid var(--c-line-solid-alternative);
+	border-radius: 8px;
+	box-shadow: var(--c-shadow-heavy);
+
+	@include m.mobileOnly {
+		width: calc(100vw - 60px);
+	}
+
+	.header {
+		@include m.flex(space-between);
+		width: 100%;
+
+		.title {
+			@include m.fontHeading2("bold");
+			@include m.makeEllipsis;
+			color: var(--c-label-normal);
+		}
+
+		.closeButton {
+			@include m.flex;
+			width: 32px;
+			height: 32px;
+
+			path {
+				stroke: var(--c-label-normal);
+			}
+		}
+	}
+
+	.content {
+		width: 100%;
+		max-height: 70vh;
+		overflow-y: scroll;
+	}
+
+	.footer {
+		width: 100%;
+		padding-top: 12px;
+		background-color: var(--c-background-normal-normal);
+	}
+}

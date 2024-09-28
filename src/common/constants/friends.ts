@@ -9,8 +9,8 @@ export const FRIENDS_TAB_MAPPER: Record<FriendsTab, string> = {
 } as const;
 
 export const FRIEND_TYPE_MAPPER: Record<FriendType, string> = {
-	default: "",
-	friend: "친구",
-	received: "친구 요청 받음",
-	requested: "친구 요청 중",
+	DEFAULT: "",
+	FRIEND: "친구",
+	RECEIVED: "친구 요청 받음",
+	REQUESTED: "친구 요청 중",
 } as const;

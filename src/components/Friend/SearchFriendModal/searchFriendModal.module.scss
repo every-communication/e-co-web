@@ -1,0 +1,20 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	.contentWrapper {
+		@include m.flex(flex-start, flex-start, column);
+		gap: 12px;
+		width: 100%;
+		max-height: 70vh;
+		padding: 16px;
+
+		form {
+			width: 100%;
+
+			.searchInput {
+				width: 100%;
+			}
+		}
+	}
+}

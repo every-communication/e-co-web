@@ -4,4 +4,5 @@ export const friends = createQueryKeys("friends", {
 	getFriends: ["getFriends"],
 	getRequestedFriends: ["getRequestedFriends"],
 	getReceivedFriends: ["getReceivedFriends"],
+	searchFriends: (userInfo: string) => ["searchFriends", { userInfo }],
 });

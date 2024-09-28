@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { getFriendsApi, getReceivedFriendsApi, getRequestedFriendsApi } from "@/services/friends";
+import { getFriendsApi, getReceivedFriendsApi, getRequestedFriendsApi, searchFriendsApi } from "@/services/friends";
 
 import { queries } from "..";
 
@@ -23,4 +23,11 @@ export const useGetReceivedFriendsSuspenseQuery = () =>
 	useSuspenseQuery({
 		queryKey: queries.friends.getReceivedFriends.queryKey,
 		queryFn: getReceivedFriendsApi,
+	});
+
+/** 친구 검색 */
+export const useSearchFriendsSuspenseQuery = (userInfo: string) =>
+	useSuspenseQuery({
+		queryKey: queries.friends.searchFriends(userInfo).queryKey,
+		queryFn: () => searchFriendsApi(userInfo),
 	});

@@ -1,0 +1,20 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex;
+	@include m.fixed(auto 84px 75px auto);
+	width: 56px;
+	height: 56px;
+	background-color: var(--c-primary-normal);
+	border-radius: 50%;
+	box-shadow: var(--c-shadow-strong);
+
+	.plus path {
+		stroke: var(--c-static-white);
+	}
+
+	@include m.mobileOnly {
+		@include m.fixed(auto 24px 24px auto);
+	}
+}

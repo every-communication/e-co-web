@@ -25,7 +25,7 @@ const HorizontalFriend: React.FC<Props> = ({ friend, friendType }) => {
 				</div>
 				<address className={styles.email}>{friend.email}</address>
 			</div>
-			<Menu friendType={friendType} />
+			<Menu friendType={friendType} friendId={friend.userId} />
 		</li>
 	);
 };

@@ -7,7 +7,7 @@ const ReceivedFriendList: React.FC = () => {
 	return (
 		<ul>
 			{data.data.map((friend) => (
-				<HorizontalFriend key={friend.userId} friend={friend} friendType="received" />
+				<HorizontalFriend key={friend.userId} friend={friend} friendType="RECEIVED" />
 			))}
 		</ul>
 	);

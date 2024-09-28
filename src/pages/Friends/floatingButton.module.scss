@@ -15,6 +15,6 @@
 	}
 
 	@include m.mobileOnly {
-		@include m.fixed(auto 24px 24px auto);
+		@include m.fixed(auto 24px calc(24px + c.$S_DEFAULT_BOTTOM_NAVIGATOR_HEIGHT) auto);
 	}
 }

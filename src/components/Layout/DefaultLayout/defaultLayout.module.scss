@@ -23,7 +23,7 @@
 		}
 
 		@include m.mobileOnly {
-			padding: 24px 16px;
+			padding: 24px 16px calc(24px + c.$S_DEFAULT_BOTTOM_NAVIGATOR_HEIGHT);
 		}
 	}
 }

@@ -9,6 +9,10 @@
 		max-height: 70vh;
 		padding: 16px;
 
+		@include m.mobileOnly {
+			padding: 16px 0 0;
+		}
+
 		form {
 			width: 100%;
 

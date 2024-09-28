@@ -27,6 +27,8 @@
 
 		.email {
 			@include m.fontCaption1("regular");
+			@include m.makeEllipsis;
+			width: 100%;
 			color: var(--c-label-alternative);
 		}
 	}

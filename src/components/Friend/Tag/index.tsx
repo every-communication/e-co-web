@@ -13,7 +13,7 @@ interface Props {
 }
 
 const FriendTag: React.FC<Props> = ({ friendType, className }) => {
-	if (friendType === "default") return null;
+	if (friendType === "DEFAULT") return null;
 
 	return <span className={cx(styles.wrapper, styles[friendType], className)}>{FRIEND_TYPE_MAPPER[friendType]}</span>;
 };

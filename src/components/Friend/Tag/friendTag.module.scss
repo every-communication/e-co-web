@@ -1,3 +1,4 @@
+/* stylelint-disable selector-class-pattern */
 @use "src/styles/constants" as c;
 @use "src/styles/mixins" as m;
 
@@ -8,15 +9,15 @@
 	white-space: nowrap;
 	border-radius: 100px;
 
-	&.friend {
+	&.FRIEND {
 		background-color: var(--c-accent-light-blue);
 	}
 
-	&.requested {
+	&.REQUESTED {
 		background-color: var(--c-accent-red-orange);
 	}
 
-	&.received {
+	&.RECEIVED {
 		background-color: var(--c-accent-lime);
 	}
 }

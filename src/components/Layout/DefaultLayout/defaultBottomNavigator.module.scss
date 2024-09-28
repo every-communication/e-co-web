@@ -2,5 +2,41 @@
 @use "src/styles/mixins" as m;
 
 .wrapper {
-	width: 100%;
+	@include m.desktopOnly {
+		display: none;
+	}
+
+	.nav {
+		@include m.fixed(auto auto 0 50%);
+		@include m.flex(space-evenly);
+		z-index: c.$Z_BOTTOM_NAVIGATOR;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		width: 100%;
+		height: c.$S_DEFAULT_BOTTOM_NAVIGATOR_HEIGHT;
+		background-color: var(--c-background-normal-normal);
+		border-radius: 20px 20px 0 0;
+		box-shadow: var(--c-shadow-strong);
+		transform: translateX(-50%);
+
+		.item {
+			@include m.flex(flex-start, center, column);
+			@include m.fontLabel1Normal("medium");
+			gap: 10px;
+			color: var(--c-label-normal);
+
+			svg {
+				width: 24px;
+				height: 24px;
+			}
+
+			&.active {
+				color: var(--c-primary-normal);
+
+				svg path {
+					stroke: var(--c-primary-normal);
+				}
+			}
+		}
+	}
 }

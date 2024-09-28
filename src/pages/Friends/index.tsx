@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { useSearch } from "@tanstack/react-router";
 
 import Content, { LoadingContent } from "./Content";
+import FloatingButton from "./FloatingButton";
 import FriendList from "./FriendList";
 import ReceivedFriendList from "./ReceivedFriendList";
 import RequestedFriendList from "./RequestedFriendList";
@@ -24,6 +25,7 @@ const FriendsPage: React.FC = () => {
 					{tab === "requested" && <RequestedFriendList />}
 				</Content>
 			</Suspense>
+			<FloatingButton />
 		</main>
 	);
 };

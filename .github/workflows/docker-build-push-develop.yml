@@ -70,7 +70,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --platform linux/amd64/v8 -t e-co-web .
+          docker build --platform linux/amd64/v3 -t e-co-web .
           docker tag e-co-web ghcr.io/${{ github.repository }}:${{ steps.package-version.outputs.version }}
           docker tag e-co-web ghcr.io/${{ github.repository }}:latest
 

@@ -1,0 +1,23 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex;
+	position: relative;
+	gap: 4px;
+	padding: 4px 7px;
+	color: var(--c-primary-normal);
+	border-radius: 4px;
+
+	&:disabled {
+		color: var(--c-label-disable);
+	}
+
+	&.medium {
+		@include m.fontBody1Normal("bold");
+	}
+
+	&.small {
+		@include m.fontLabel1Normal("bold");
+	}
+}

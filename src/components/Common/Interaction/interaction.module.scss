@@ -12,6 +12,10 @@
 	transition: opacity 0.2s ease 0s;
 	will-change: opacity;
 
+	@include m.mobileOnly {
+		display: none;
+	}
+
 	&:not([aria-disabled="true"]) {
 		&.normal {
 			&:hover {

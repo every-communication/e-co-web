@@ -11,7 +11,8 @@
 	box-shadow: var(--c-shadow-heavy);
 
 	@include m.mobileOnly {
-		width: calc(100vw - 60px);
+		width: calc(100vw - 20px);
+		padding: 16px;
 	}
 
 	.header {

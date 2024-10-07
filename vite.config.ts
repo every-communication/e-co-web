@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, envDir);
 
 	return {
-		base: "./",
+		base: "/",
 		envDir,
 		resolve: {
 			extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"],

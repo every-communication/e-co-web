@@ -9,6 +9,11 @@
 	white-space: nowrap;
 	border-radius: 100px;
 
+	@include m.mobileOnly {
+		@include m.fontCaption2("bold");
+		padding: 2px 4px;
+	}
+
 	&.FRIEND {
 		background-color: var(--c-accent-light-blue);
 	}

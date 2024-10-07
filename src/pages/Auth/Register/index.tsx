@@ -100,7 +100,7 @@ const RegisterPage: React.FC = () => {
 						label="비밀번호"
 						placeholder="비밀번호를 입력하세요"
 						type="password"
-						inputMode="none"
+						inputMode="text"
 						autoComplete="new-password"
 						errorMessage={errors.password?.message}
 						required
@@ -111,7 +111,7 @@ const RegisterPage: React.FC = () => {
 					<Input
 						label="비밀번호 확인"
 						type="password"
-						inputMode="none"
+						inputMode="text"
 						autoComplete="new-password"
 						errorMessage={errors.passwordConfirm?.message}
 						placeholder="비밀번호와 동일하게 입력하세요"

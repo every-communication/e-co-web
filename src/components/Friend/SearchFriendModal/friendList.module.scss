@@ -10,4 +10,8 @@
 	overflow-y: scroll;
 	border: 1px solid var(--c-line-normal-normal);
 	border-radius: 4px;
+
+	@include m.mobileOnly {
+		padding: 12px 4px;
+	}
 }

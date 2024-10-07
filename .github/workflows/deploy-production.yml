@@ -24,16 +24,15 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          node-version: ${{ matrix.node-version }}
           version: 8
-
-      - name: install dependencies and build
-        run: pnpm install --no-frozen-lockfile && pnpm run build:prod
 
       - name: Create .env.production file
         run: |
           echo "VITE_PORT=${{ secrets.VITE_PORT }}" >> ${{ github.workspace }}/env/.env.production
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> ${{ github.workspace }}/env/.env.production
+
+      - name: install dependencies and build
+        run: pnpm install --no-frozen-lockfile && pnpm run build:prod
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

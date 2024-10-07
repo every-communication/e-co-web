@@ -81,7 +81,7 @@ const LoginPage: React.FC = () => {
 						type="password"
 						className={styles.input}
 						placeholder="비밀번호를 입력하세요."
-						inputMode="none"
+						inputMode="text"
 						autoComplete="current-password"
 						errorMessage={errors.password?.message}
 						{...register("password")}

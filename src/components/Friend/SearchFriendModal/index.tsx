@@ -48,7 +48,7 @@ const SearchFriendModal: React.FC<Props> = ({ isShow, onClose }) => {
 				<Input
 					value={input}
 					type="text"
-					inputMode="none"
+					inputMode="text"
 					onChange={onChange}
 					onClickClearButton={onClickClear}
 					placeholder="이메일 혹은 닉네임을 입력하세요."

@@ -3,6 +3,7 @@
 
 .wrapper {
 	@include m.flex(flex-start, flex-start, column);
+	flex: 1;
 	gap: 10px;
 	width: 100%;
 	padding: 12px;

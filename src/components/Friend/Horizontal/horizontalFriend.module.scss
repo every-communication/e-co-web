@@ -6,6 +6,7 @@
 	gap: 20px;
 	width: 100%;
 	padding: 12px;
+	border-bottom: 1px solid var(--c-line-normal-normal);
 
 	@include m.mobileOnly {
 		gap: 8px;

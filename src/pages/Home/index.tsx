@@ -1,14 +1,11 @@
 import cx from "clsx";
 
-import { useMe } from "@/hooks";
-
 import { CreateRoomButton, JoinRoom, RecentCallList } from "./_sections";
 
 import styles from "./homePage.module.scss";
 
+// TODO: 로직 및 컴포넌트 분리 작업
 const HomePage: React.FC = () => {
-	const { logout } = useMe();
-
 	return (
 		<main className={styles.wrapper}>
 			<div className={cx(styles.content, styles.left)}>

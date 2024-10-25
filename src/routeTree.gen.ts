@@ -24,6 +24,9 @@ import { Route as AuthOauthCallbackImport } from './routes/auth/oauth-callback'
 const MyPageLazyImport = createFileRoute('/my-page')()
 const IndexLazyImport = createFileRoute('/')()
 const AuthIndexLazyImport = createFileRoute('/auth/')()
+const VideoTelegraphyCodeLazyImport = createFileRoute(
+  '/video-telegraphy/$code',
+)()
 const AuthRegisterLazyImport = createFileRoute('/auth/register')()
 
 // Create/Update Routes
@@ -52,6 +55,13 @@ const AuthIndexLazyRoute = AuthIndexLazyImport.update({
   path: '/',
   getParentRoute: () => AuthRouteRoute,
 } as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
+
+const VideoTelegraphyCodeLazyRoute = VideoTelegraphyCodeLazyImport.update({
+  path: '/video-telegraphy/$code',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/video-telegraphy.$code.lazy').then((d) => d.Route),
+)
 
 const AuthRegisterLazyRoute = AuthRegisterLazyImport.update({
   path: '/register',
@@ -133,6 +143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterLazyImport
       parentRoute: typeof AuthRouteImport
     }
+    '/video-telegraphy/$code': {
+      id: '/video-telegraphy/$code'
+      path: '/video-telegraphy/$code'
+      fullPath: '/video-telegraphy/$code'
+      preLoaderRoute: typeof VideoTelegraphyCodeLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/auth/': {
       id: '/auth/'
       path: '/'
@@ -156,6 +173,7 @@ export const routeTree = rootRoute.addChildren({
   }),
   FriendsRoute,
   MyPageLazyRoute,
+  VideoTelegraphyCodeLazyRoute,
 })
 
 /* prettier-ignore-end */
@@ -169,7 +187,8 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/auth",
         "/friends",
-        "/my-page"
+        "/my-page",
+        "/video-telegraphy/$code"
       ]
     },
     "/": {
@@ -206,6 +225,9 @@ export const routeTree = rootRoute.addChildren({
     "/auth/register": {
       "filePath": "auth/register.lazy.tsx",
       "parent": "/auth"
+    },
+    "/video-telegraphy/$code": {
+      "filePath": "video-telegraphy.$code.lazy.tsx"
     },
     "/auth/": {
       "filePath": "auth/index.lazy.tsx",

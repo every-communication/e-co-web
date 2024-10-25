@@ -26,6 +26,12 @@ export default defineConfig(({ mode }) => {
 			},
 			strictPort: true,
 			host: true,
+			proxy: {
+				"/ai-ws": {
+					target: env.VITE_AI_TARGET_URL,
+					ws: true,
+				},
+			},
 		},
 		preview: {
 			port: parseInt(env.VITE_PORT),

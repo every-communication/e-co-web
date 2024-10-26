@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useRef, useState } from "react";
 
-import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
 import {
 	BaseVideoTelegraphyServerEvent,
 	ServerAnswerData,
@@ -9,10 +8,7 @@ import {
 	ServerOfferData,
 	VideoTelegraphyServerEventMap,
 } from "@/utils/videoTelegraphy/types";
-import VideoTelegraphySocket, {
-	ICE_STUN_SERVER,
-	SIGNALING_SERVER_URL,
-} from "@/utils/videoTelegraphy/videoTelegraphySocket";
+import VideoTelegraphySocket, { SIGNALING_SERVER_URL } from "@/utils/videoTelegraphy/videoTelegraphySocket";
 
 import useMe from "./useMe";
 
@@ -34,7 +30,6 @@ export interface ReturnUseVideoTelegraphySocket {
 	close: () => void;
 }
 
-// TODO: update
 export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphySocket => {
 	const { me } = useMe();
 	const [reconnectCount, setReconnectCount] = useState(0);
@@ -52,7 +47,6 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 		};
 
 		videoTelegraphy.webSocket.onclose = (event) => {
-			console.log("WebSocket connection closed", event);
 			setConnectState(WebSocket.CLOSED);
 
 			if (reconnectCount < 5) {
@@ -114,17 +108,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const createPeerConnection = useCallback(
 		async (args: JoinedRoomArgs) => {
-			videoTelegraphy.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
-
-			videoTelegraphy.peerConnection.onicecandidate = (event) => {
-				if (event.candidate) {
-					videoTelegraphy.emitEvent({ type: "candidate", candidate: event.candidate, room });
-				}
-			};
-
-			videoTelegraphy.peerConnection.ontrack = (event) => {
-				handleRemoteStream(args.oppositeVideoElement)(event);
-			};
+			videoTelegraphy.createPeerConnection(handleRemoteStream(args.oppositeVideoElement));
 
 			await setUpLocalStream(args.localVideoElement);
 			if (localStream.current) {
@@ -133,14 +117,13 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 					.forEach((track) => videoTelegraphy.peerConnection!.addTrack(track, localStream.current!));
 			}
 		},
-		[handleRemoteStream, room, setUpLocalStream, videoTelegraphy],
+		[handleRemoteStream, setUpLocalStream, videoTelegraphy],
 	);
 
 	const joinedRoomHandler = useCallback(
 		async (data: BaseVideoTelegraphyServerEvent<"joinedRoom"> & JoinedRoomArgs) => {
 			const { user1Id, user2Id } = data.room;
 			await setUpLocalStream(data.localVideoElement);
-			window.dispatchEvent(new CustomEvent(JOINED_ROOM_EVENT_NAME));
 			if (user1Id && user2Id) {
 				await createPeerConnection(data);
 				await videoTelegraphy.sendOffer();
@@ -199,7 +182,6 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const participantLeftHandler = useCallback(
 		(args: VideoTelegraphyServerEventMap["participantLeft"] & JoinedRoomArgs) => {
-			window.dispatchEvent(new CustomEvent(LEFT_ROOM_EVENT_NAME));
 			videoTelegraphy.peerConnection?.close();
 			videoTelegraphy.peerConnection = null;
 			args.oppositeVideoElement.srcObject = null;

@@ -32,6 +32,18 @@ class VideoTelegraphySocket {
 		this.emitEvent({ type: "leaveRoom", room: this.#room });
 	}
 
+	createPeerConnection(handleRemoteStream: (event: RTCTrackEvent) => void) {
+		this.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
+
+		this.peerConnection.onicecandidate = (event) => {
+			if (event.candidate) {
+				this.emitEvent({ type: "candidate", candidate: event.candidate, room: this.#room });
+			}
+		};
+
+		this.peerConnection.ontrack = handleRemoteStream;
+	}
+
 	async sendOffer() {
 		if (!this.checkIsPeerConnection(this.peerConnection)) return;
 		const offer = await this.peerConnection.createOffer();

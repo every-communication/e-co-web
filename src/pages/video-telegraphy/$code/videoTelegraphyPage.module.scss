@@ -1,17 +1,12 @@
 @use "src/styles/constants" as c;
 @use "src/styles/mixins" as m;
 
-$PC_GAP: 20px;
+$LOCAL_GAP: 20px;
 
 .wrapper {
 	position: relative;
 	width: 100%;
-	padding: 120px 40px;
 	background-color: var(--c-label-alternative);
-
-	@include m.mobileOnly {
-		padding-top: c.$S_DEFAULT_HEADER_MOBILE_HEIGHT;
-	}
 
 	.localVideo {
 		@include m.posCenter;
@@ -32,16 +27,34 @@ $PC_GAP: 20px;
 
 	&.allParticipated {
 		.localVideo {
-			@include m.absolute(auto calc(40px + $PC_GAP) calc(120px + $PC_GAP) auto);
+			@include m.absolute(auto calc(40px + $LOCAL_GAP) calc(120px + $LOCAL_GAP) auto);
+			z-index: 2;
 			width: 200px;
 			height: 200px;
 			object-fit: cover;
+			transform: none;
+
+			@include m.mobileOnly {
+				@include m.absolute($LOCAL_GAP $LOCAL_GAP auto auto);
+				width: 120px;
+				height: 120px;
+			}
 		}
 
 		.remoteVideo {
 			@include m.posCenter;
+			z-index: 1;
+			display: block;
 			width: calc(100% - 80px);
+			height: 100%;
+			max-height: calc(100% - 240px);
 			object-fit: cover;
+
+			@include m.mobileOnly {
+				width: 100%;
+				height: 100%;
+				max-height: unset;
+			}
 		}
 	}
 }

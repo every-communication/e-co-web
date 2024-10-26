@@ -116,21 +116,15 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	const createPeerConnection = useCallback(
 		async (args: JoinedRoomArgs) => {
 			console.log("Creating peer connection");
-
 			videoTelegraphy.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
-
 			console.log("Created peer connection", videoTelegraphy.peerConnection);
 
-			videoTelegraphy.peerConnection.onicegatheringstatechange = () => {
+			videoTelegraphy.peerConnection.onicegatheringstatechange = (event) => {
 				console.log("ICE gathering state changed:", videoTelegraphy.peerConnection!.iceGatheringState);
 			};
 
 			videoTelegraphy.peerConnection.onicecandidate = (event) => {
 				videoTelegraphy.emitEvent({ type: "candidate", candidate: event.candidate!, room });
-			};
-
-			videoTelegraphy.peerConnection.onsignalingstatechange = (event) => {
-				console.log("Signaling state changed:", videoTelegraphy.peerConnection!.signalingState);
 			};
 
 			videoTelegraphy.peerConnection.ontrack = (event) => {
@@ -174,8 +168,17 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 		async (args: ServerAnswerData) => {
 			if (!videoTelegraphy.peerConnection) return;
 
+			const setRemoteDescription = async () => {
+				try {
+					await videoTelegraphy.peerConnection!.setRemoteDescription(new RTCSessionDescription(args.answer));
+					console.log("Remote description set successfully");
+				} catch (error) {
+					console.error("Failed to set remote description:", error);
+				}
+			};
+
 			if (videoTelegraphy.peerConnection.signalingState === "have-local-offer") {
-				await videoTelegraphy.peerConnection.setRemoteDescription(new RTCSessionDescription(args.answer));
+				await setRemoteDescription();
 			} else if (videoTelegraphy.peerConnection.signalingState === "stable") {
 				console.warn("Received answer but signaling state is already stable");
 			} else {
@@ -183,6 +186,12 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 					"Cannot set remote description. Invalid signaling state:",
 					videoTelegraphy.peerConnection.signalingState,
 				);
+				videoTelegraphy.peerConnection.addEventListener("signalingstatechange", async () => {
+					if (videoTelegraphy.peerConnection?.signalingState === "stable") {
+						await setRemoteDescription();
+						videoTelegraphy.peerConnection.removeEventListener("signalingstatechange", setRemoteDescription);
+					}
+				});
 			}
 		},
 		[videoTelegraphy.peerConnection],
@@ -234,7 +243,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 						break;
 
 					case "answer":
-						answerHandler(data as ServerAnswerData);
+						await answerHandler(data as ServerAnswerData);
 						break;
 
 					case "candidate":

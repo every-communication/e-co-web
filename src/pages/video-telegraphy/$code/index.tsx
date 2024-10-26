@@ -5,9 +5,10 @@ import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import cx from "clsx";
 
-import { IconCamera, IconMic, IconPhoneOff } from "@/assets/icons/videoTelegraphy";
+import { IconCamera, IconCopy, IconMic, IconPhoneOff } from "@/assets/icons/videoTelegraphy";
 import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
+import { useToast } from "@/hooks";
 import { useVideoTelegraphy } from "@/hooks/useVideoTelegraphy";
 import { useGetRoomQuery } from "@/queries/videoTelegraphy/queries";
 
@@ -17,6 +18,7 @@ const VideoTelegraphyPage: React.FC = () => {
 	const { code } = useParams({ from: "/video-telegraphy/$code" });
 	const navigate = useNavigate();
 
+	const { addToast } = useToast();
 	const { data, refetch } = useGetRoomQuery(code);
 	const { connectState, addEventListener, joinRoom, leaveRoom, createWebSocket, close } = useVideoTelegraphy();
 
@@ -33,6 +35,15 @@ const VideoTelegraphyPage: React.FC = () => {
 		navigate({ to: "/", replace: true });
 	};
 
+	const copyCode = async () => {
+		try {
+			await navigator.clipboard.writeText(code);
+			addToast({ message: "코드를 복사하였습니다.", state: "positive" });
+		} catch {
+			addToast({ message: "코드 복사에 실패하였습니다.", state: "negative" });
+		}
+	};
+
 	useEffect(() => {
 		createWebSocket();
 	}, [createWebSocket]);
@@ -40,7 +51,6 @@ const VideoTelegraphyPage: React.FC = () => {
 	useEffect(() => {
 		const handler = () => {
 			refetch();
-			console.log("joined");
 		};
 
 		window.addEventListener(JOINED_ROOM_EVENT_NAME, handler);
@@ -70,6 +80,10 @@ const VideoTelegraphyPage: React.FC = () => {
 
 	return (
 		<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>
+			<button type="button" className={styles.copy} onClick={copyCode}>
+				CODE {code}
+				<IconCopy />
+			</button>
 			<video ref={localVideo} className={styles.localVideo} />
 			<video ref={remoteVideo} className={styles.remoteVideo} />
 			<div className={styles.menu}>

@@ -19,7 +19,7 @@ $BUTTON_DROP_SHADOW: drop-shadow(0 0 1px rgba(0, 0, 0, 8%)) drop-shadow(0 0 1px 
 		color: var(--c-line-solid-normal);
 
 		@include m.mobileOnly {
-			@include m.fontLabel1Normal("bold");
+			@include m.fontCaption1("bold");
 		}
 	}
 
@@ -44,6 +44,7 @@ $BUTTON_DROP_SHADOW: drop-shadow(0 0 1px rgba(0, 0, 0, 8%)) drop-shadow(0 0 1px 
 	.menu {
 		@include m.absolute(auto auto 20px 50%);
 		@include m.flex;
+		z-index: 2;
 		gap: 24px;
 		transform: translateX(-50%);
 

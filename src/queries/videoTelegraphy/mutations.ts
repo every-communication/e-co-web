@@ -1,9 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useToast } from "@/hooks";
-import { createRoomApi, joinRoomApi, leaveRoomApi } from "@/services/videoTelegraphy";
+import { createRoomApi, getRoomApi, joinRoomApi, leaveRoomApi } from "@/services/videoTelegraphy";
 
 import { queries } from "..";
+
+export const useRoomValidateMutation = () => {
+	return useMutation({
+		mutationFn: getRoomApi,
+	});
+};
 
 /** 방 생성 */
 export const useCreateRoomMutation = () => {

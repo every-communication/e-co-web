@@ -1,4 +1,4 @@
-import { type ReactNode, useCallback, useEffect, useMemo } from "react";
+import { type ReactNode, useCallback, useEffect } from "react";
 
 import { useNavigate, useParams } from "@tanstack/react-router";
 
@@ -6,7 +6,6 @@ import Loading from "@/components/Common/Loading/Loading";
 import { VideoTelegraphyProvider } from "@/contexts/videoTelegraphy/VideoTelegraphyContext";
 import { useToast } from "@/hooks";
 import { useGetRoomQuery } from "@/queries/videoTelegraphy/queries";
-import { getKyHTTPError, isKyHTTPError } from "@/services/apiClient";
 
 interface Props {
 	children: ReactNode;
@@ -18,14 +17,13 @@ const RoomValidateProvider: React.FC<Props> = ({ children }) => {
 
 	const { addToast } = useToast();
 
-	const { isLoading, error, isError } = useGetRoomQuery(code);
+	const { isLoading, isError } = useGetRoomQuery(code);
 
-	const handleError = useCallback(async () => {
-		if (!error || !isKyHTTPError(error)) return;
-		const { message } = await getKyHTTPError(error);
-		addToast({ message, state: "negative" });
+	const handleError = useCallback(() => {
+		if (!isError) return;
+		addToast({ message: "존재하지 않는 방이거나, 통화가 진행 중인 방입니다.", state: "negative" });
 		navigate({ to: "/", replace: true });
-	}, [addToast, error, navigate]);
+	}, [addToast, isError, navigate]);
 
 	useEffect(() => {
 		handleError();

@@ -20,14 +20,9 @@ export const authApiClient = apiClient.extend({
 		beforeRequest: [
 			async (request) => {
 				if (promiseHolder.isLocked) await promiseHolder.promise;
-				const abortController = new AbortController();
 
 				const { accessToken, refreshToken } = getTokens();
-				if (!accessToken || !refreshToken) {
-					abortController.abort();
-					window.dispatchEvent(new CustomEvent(NO_TOKEN_EVENT_NAME));
-					return { ...request, signal: abortController.signal };
-				}
+				if (!accessToken || !refreshToken) void window.dispatchEvent(new CustomEvent(NO_TOKEN_EVENT_NAME));
 				request.headers.set("Authorization", `Bearer ${accessToken}`);
 				return request;
 			},

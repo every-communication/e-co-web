@@ -3,27 +3,32 @@
 
 $MOBILE_GAP: 16px;
 
-.wrapper {
-	@include m.flex;
-	@include m.fontHeading2("bold");
-	gap: 12px;
+.formWrapper {
 	width: 100%;
 	height: 100px;
 
-	@include m.mobileOnly {
-		@include m.fixed(auto $MOBILE_GAP calc(c.$S_DEFAULT_BOTTOM_NAVIGATOR_HEIGHT + $MOBILE_GAP) auto);
-		width: 60px;
-		height: 60px;
-		padding: 0 !important;
-		border-radius: 50% !important;
+	.wrapper {
+		@include m.flex;
+		@include m.fontHeading2("bold");
+		gap: 12px;
+		width: 100%;
+		height: 100%;
 
-		.text {
-			display: none;
+		@include m.mobileOnly {
+			@include m.fixed(auto $MOBILE_GAP calc(c.$S_DEFAULT_BOTTOM_NAVIGATOR_HEIGHT + $MOBILE_GAP) auto);
+			width: 60px;
+			height: 60px;
+			padding: 0 !important;
+			border-radius: 50% !important;
+
+			.text {
+				display: none;
+			}
 		}
-	}
 
-	.callIcon path {
-		stroke: var(--c-static-white);
-		stroke-width: 2px;
+		.callIcon path {
+			stroke: var(--c-static-white);
+			stroke-width: 2px;
+		}
 	}
 }

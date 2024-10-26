@@ -1,6 +1,8 @@
+import { range } from "lodash-es";
+
 import { useSearchFriendsSuspenseQuery } from "@/queries/friends/quries";
 
-import HorizontalFriend from "../Horizontal";
+import HorizontalFriend, { LoadingHorizontalFriend } from "../Horizontal";
 
 import styles from "./friendList.module.scss";
 
@@ -23,5 +25,11 @@ const FriendList: React.FC<Props> = ({ keyword }) => {
 export default FriendList;
 
 export const LoadingFriendList: React.FC = () => {
-	return null;
+	return (
+		<div className={styles.wrapper}>
+			{range(10).map((value) => (
+				<LoadingHorizontalFriend key={value} />
+			))}
+		</div>
+	);
 };

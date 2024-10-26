@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useRef, useState } from "react";
 
+import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
 import {
 	BaseVideoTelegraphyServerEvent,
 	ServerAnswerData,
@@ -39,6 +40,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	const [connectState, setConnectState] = useState<number>(WebSocket.CLOSED);
 
 	const createWebSocket = useCallback(() => {
+		if (videoTelegraphy.webSocket) return;
 		videoTelegraphy.webSocket = new WebSocket(SIGNALING_SERVER_URL);
 
 		videoTelegraphy.webSocket.onopen = () => {
@@ -46,7 +48,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 			setConnectState(WebSocket.OPEN);
 		};
 
-		videoTelegraphy.webSocket.onclose = (event) => {
+		videoTelegraphy.webSocket.onclose = () => {
 			setConnectState(WebSocket.CLOSED);
 
 			if (reconnectCount < 5) {
@@ -123,6 +125,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	const joinedRoomHandler = useCallback(
 		async (data: BaseVideoTelegraphyServerEvent<"joinedRoom"> & JoinedRoomArgs) => {
 			const { user1Id, user2Id } = data.room;
+			window.dispatchEvent(new CustomEvent(JOINED_ROOM_EVENT_NAME));
 			await setUpLocalStream(data.localVideoElement);
 			if (user1Id && user2Id) {
 				await createPeerConnection(data);
@@ -182,6 +185,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const participantLeftHandler = useCallback(
 		(args: VideoTelegraphyServerEventMap["participantLeft"] & JoinedRoomArgs) => {
+			window.dispatchEvent(new CustomEvent(LEFT_ROOM_EVENT_NAME));
 			videoTelegraphy.peerConnection?.close();
 			videoTelegraphy.peerConnection = null;
 			args.oppositeVideoElement.srcObject = null;

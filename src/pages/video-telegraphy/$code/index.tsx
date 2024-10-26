@@ -2,9 +2,11 @@
 
 import { useEffect, useRef } from "react";
 
-import { useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import cx from "clsx";
 
+import { IconCamera, IconMic, IconPhoneOff } from "@/assets/icons/videoTelegraphy";
+import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
 import { useVideoTelegraphy } from "@/hooks/useVideoTelegraphy";
 import { useGetRoomQuery } from "@/queries/videoTelegraphy/queries";
@@ -13,9 +15,10 @@ import styles from "./videoTelegraphyPage.module.scss";
 
 const VideoTelegraphyPage: React.FC = () => {
 	const { code } = useParams({ from: "/video-telegraphy/$code" });
+	const navigate = useNavigate();
 
-	const { data } = useGetRoomQuery(code);
-	const { connectState, addEventListener, joinRoom, leaveRoom, createWebSocket } = useVideoTelegraphy();
+	const { data, refetch } = useGetRoomQuery(code);
+	const { connectState, addEventListener, joinRoom, leaveRoom, createWebSocket, close } = useVideoTelegraphy();
 
 	const user1Id = data?.data.user1Id;
 	const user2Id = data?.data.user2Id;
@@ -24,9 +27,30 @@ const VideoTelegraphyPage: React.FC = () => {
 	const localVideo = useRef<HTMLVideoElement>(null);
 	const remoteVideo = useRef<HTMLVideoElement>(null);
 
+	const onClickEndCall = () => {
+		leaveRoom();
+		close();
+		navigate({ to: "/", replace: true });
+	};
+
 	useEffect(() => {
 		createWebSocket();
 	}, [createWebSocket]);
+
+	useEffect(() => {
+		const handler = () => {
+			refetch();
+			console.log("joined");
+		};
+
+		window.addEventListener(JOINED_ROOM_EVENT_NAME, handler);
+		window.addEventListener(LEFT_ROOM_EVENT_NAME, handler);
+
+		return () => {
+			window.removeEventListener(JOINED_ROOM_EVENT_NAME, handler);
+			window.removeEventListener(LEFT_ROOM_EVENT_NAME, handler);
+		};
+	}, [refetch]);
 
 	useEffect(() => {
 		if (connectState !== WebSocket.OPEN) return;
@@ -40,13 +64,25 @@ const VideoTelegraphyPage: React.FC = () => {
 
 		return () => {
 			leaveRoom();
+			close();
 		};
-	}, [addEventListener, connectState, joinRoom, leaveRoom]);
+	}, [addEventListener, close, connectState, joinRoom, leaveRoom]);
 
 	return (
 		<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>
 			<video ref={localVideo} className={styles.localVideo} />
 			<video ref={remoteVideo} className={styles.remoteVideo} />
+			<div className={styles.menu}>
+				<button type="button" aria-label="toggle mic" className={styles.enabled}>
+					<IconMic />
+				</button>
+				<button type="button" aria-label="end call" className={styles.endCall} onClick={onClickEndCall}>
+					<IconPhoneOff />
+				</button>
+				<button type="button" aria-label="toggle camera" className={styles.enabled}>
+					<IconCamera />
+				</button>
+			</div>
 		</HeightFitLayout>
 	);
 };

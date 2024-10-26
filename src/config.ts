@@ -10,4 +10,5 @@ const getConfig = (name: string): string => {
 export default {
 	PORT: getConfig("PORT"),
 	API_URL: getConfig("API_URL"),
+	SIGNALING_API_URL: getConfig("SIGNALING_API_URL"),
 };

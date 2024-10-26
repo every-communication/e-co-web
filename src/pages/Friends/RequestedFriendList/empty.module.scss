@@ -11,15 +11,4 @@
 			stroke-width: 2px;
 		}
 	}
-
-	.cta {
-		@include m.flex;
-		gap: 8px;
-
-		.plus {
-			path {
-				stroke: var(--c-static-white);
-			}
-		}
-	}
 }

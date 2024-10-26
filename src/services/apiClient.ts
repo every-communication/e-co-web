@@ -1,7 +1,7 @@
 import ky, { type HTTPError } from "ky";
 
 import { UNAUTHORIZED_MESSAGE, UNAUTHORIZED_STATUS } from "@/common/constants/auth";
-import { LOGOUT_EVENT_NAME } from "@/common/constants/events";
+import { LOGOUT_EVENT_NAME, NO_TOKEN_EVENT_NAME } from "@/common/constants/events";
 import type { TokenDTO } from "@/common/types/auth";
 import type { ApiResponseDTO, ErrorDTO } from "@/common/types/common";
 import config from "@/config";
@@ -12,6 +12,7 @@ const promiseHolder = new PromiseHolder();
 
 export const apiClient = ky.create({
 	prefixUrl: config.API_URL,
+	retry: 0,
 });
 
 export const authApiClient = apiClient.extend({
@@ -19,9 +20,14 @@ export const authApiClient = apiClient.extend({
 		beforeRequest: [
 			async (request) => {
 				if (promiseHolder.isLocked) await promiseHolder.promise;
+				const abortController = new AbortController();
 
 				const { accessToken, refreshToken } = getTokens();
-				if (!accessToken || !refreshToken) void window.dispatchEvent(new CustomEvent(LOGOUT_EVENT_NAME));
+				if (!accessToken || !refreshToken) {
+					abortController.abort();
+					window.dispatchEvent(new CustomEvent(NO_TOKEN_EVENT_NAME));
+					return { ...request, signal: abortController.signal };
+				}
 				request.headers.set("Authorization", `Bearer ${accessToken}`);
 				return request;
 			},

@@ -2,7 +2,7 @@ import { type ReactNode, useEffect } from "react";
 
 import { useNavigate } from "@tanstack/react-router";
 
-import { LOGOUT_EVENT_NAME } from "@/common/constants/events";
+import { LOGOUT_EVENT_NAME, NO_TOKEN_EVENT_NAME } from "@/common/constants/events";
 import { useMe, useToast } from "@/hooks";
 
 interface Props {
@@ -21,9 +21,16 @@ const LogoutEventHandler: React.FC<Props> = ({ children }) => {
 			navigate({ to: "/auth", replace: true });
 		};
 
+		const noTokensHandler = () => {
+			logout();
+			navigate({ to: "/auth", replace: true });
+		};
+
 		window.addEventListener(LOGOUT_EVENT_NAME, handler);
+		window.addEventListener(NO_TOKEN_EVENT_NAME, noTokensHandler);
 		return () => {
 			window.removeEventListener(LOGOUT_EVENT_NAME, handler);
+			window.removeEventListener(NO_TOKEN_EVENT_NAME, noTokensHandler);
 		};
 	}, [addToast, logout, navigate]);
 

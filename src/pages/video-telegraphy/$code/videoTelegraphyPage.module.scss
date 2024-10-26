@@ -1,0 +1,47 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+$PC_GAP: 20px;
+
+.wrapper {
+	position: relative;
+	width: 100%;
+	padding: 120px 40px;
+	background-color: var(--c-label-alternative);
+
+	@include m.mobileOnly {
+		padding-top: c.$S_DEFAULT_HEADER_MOBILE_HEIGHT;
+	}
+
+	.localVideo {
+		@include m.posCenter;
+		width: calc(100% - 80px);
+		max-height: calc(100% - 240px);
+		object-fit: cover;
+
+		@include m.mobileOnly {
+			width: 100%;
+			height: 100%;
+			max-height: unset;
+		}
+	}
+
+	.remoteVideo {
+		display: none;
+	}
+
+	&.allParticipated {
+		.localVideo {
+			@include m.absolute(auto calc(40px + $PC_GAP) calc(120px + $PC_GAP) auto);
+			width: 120px;
+			height: 120px;
+			object-fit: cover;
+		}
+
+		.remoteVideo {
+			@include m.posCenter;
+			width: calc(100% - 80px);
+			object-fit: cover;
+		}
+	}
+}

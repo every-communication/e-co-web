@@ -1,7 +1,9 @@
 export interface RoomDTO {
 	id: number;
 	code: string;
-	user1Id: number;
+	ownerId: number;
+	friendId: number | null;
+	user1Id: number | null;
 	user2Id: number | null;
 	mic1: boolean;
 	cam1: boolean;
@@ -9,4 +11,10 @@ export interface RoomDTO {
 	cam2: boolean;
 	createdAt: Date;
 	deletedAt: Date | null;
+}
+
+export interface UpdateRoomMediaDTO {
+	code: string;
+	mic: boolean;
+	cam: boolean;
 }

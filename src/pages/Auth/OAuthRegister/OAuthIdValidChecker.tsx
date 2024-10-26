@@ -16,7 +16,7 @@ const OAuthValidChecker: React.FC<Props> = ({ children }) => {
 
 	const { addToast } = useToast();
 
-	const { data, isLoading, isError } = useCheckOAuthIdValidQuery(id);
+	const { data, isFetching, isError } = useCheckOAuthIdValidQuery(id);
 
 	useEffect(() => {
 		if ((typeof data === "boolean" && !data) || isError) {
@@ -25,7 +25,7 @@ const OAuthValidChecker: React.FC<Props> = ({ children }) => {
 		}
 	}, [addToast, data, isError, navigate]);
 
-	if (isLoading) return <Loading view />;
+	if (isFetching) return <Loading view />;
 
 	return <>{children}</>;
 };

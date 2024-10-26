@@ -104,7 +104,6 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const handleRemoteStream = useCallback(
 		(el: HTMLVideoElement) => (event: RTCTrackEvent) => {
-			console.log({ remoteStream: el, event });
 			el.srcObject = event.streams[0];
 			el.playsInline = true;
 			el.autoplay = true;
@@ -115,16 +114,12 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const createPeerConnection = useCallback(
 		async (args: JoinedRoomArgs) => {
-			console.log("Creating peer connection");
 			videoTelegraphy.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
-			console.log("Created peer connection", videoTelegraphy.peerConnection);
-
-			videoTelegraphy.peerConnection.onicegatheringstatechange = (event) => {
-				console.log("ICE gathering state changed:", videoTelegraphy.peerConnection!.iceGatheringState);
-			};
 
 			videoTelegraphy.peerConnection.onicecandidate = (event) => {
-				videoTelegraphy.emitEvent({ type: "candidate", candidate: event.candidate!, room });
+				if (event.candidate) {
+					videoTelegraphy.emitEvent({ type: "candidate", candidate: event.candidate, room });
+				}
 			};
 
 			videoTelegraphy.peerConnection.ontrack = (event) => {
@@ -146,10 +141,9 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 			const { user1Id, user2Id } = data.room;
 			await setUpLocalStream(data.localVideoElement);
 			window.dispatchEvent(new CustomEvent(JOINED_ROOM_EVENT_NAME));
-			console.log({ user1Id, user2Id });
 			if (user1Id && user2Id) {
-				createPeerConnection(data);
-				videoTelegraphy.sendOffer();
+				await createPeerConnection(data);
+				await videoTelegraphy.sendOffer();
 			}
 		},
 		[createPeerConnection, setUpLocalStream, videoTelegraphy],
@@ -171,7 +165,6 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 			const setRemoteDescription = async () => {
 				try {
 					await videoTelegraphy.peerConnection!.setRemoteDescription(new RTCSessionDescription(args.answer));
-					console.log("Remote description set successfully");
 				} catch (error) {
 					console.error("Failed to set remote description:", error);
 				}

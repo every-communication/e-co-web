@@ -12,7 +12,9 @@ export type VideoTelegraphyServerEvents =
 	| "candidate"
 	| "offer";
 
-interface ServerJoinedRoomData extends RoomDTO {}
+interface ServerJoinedRoomData {
+	room: RoomDTO;
+}
 
 interface ServerParticipantLeftData {
 	room: RoomDTO;

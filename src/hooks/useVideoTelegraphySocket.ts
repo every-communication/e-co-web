@@ -129,17 +129,16 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const joinedRoomHandler = useCallback(
 		async (data: BaseVideoTelegraphyServerEvent<"joinedRoom"> & JoinedRoomArgs) => {
-			const { data: roomInfoData } = await getRoom();
-			if (!roomInfoData) return;
-			const { user1Id, user2Id } = roomInfoData.data;
+			const { user1Id, user2Id } = data.room;
 			await setUpLocalStream(data.localVideoElement);
 			window.dispatchEvent(new CustomEvent(JOINED_ROOM_EVENT_NAME));
+			console.log({ user1Id, user2Id });
 			if (user1Id && user2Id) {
 				createPeerConnection(data);
-				if (user1Id === me.id) videoTelegraphy.sendOffer();
+				videoTelegraphy.sendOffer();
 			}
 		},
-		[createPeerConnection, getRoom, me.id, setUpLocalStream, videoTelegraphy],
+		[createPeerConnection, setUpLocalStream, videoTelegraphy],
 	);
 
 	const offerHandler = useCallback(

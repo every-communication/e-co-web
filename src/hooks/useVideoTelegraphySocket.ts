@@ -37,7 +37,6 @@ export interface ReturnUseVideoTelegraphySocket {
 // TODO: update
 export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphySocket => {
 	const { me } = useMe();
-	const [answer, setAnswer] = useState<RTCSessionDescription | null>(null);
 	const [reconnectCount, setReconnectCount] = useState(0);
 	const [videoTelegraphy] = useState(() => new VideoTelegraphySocket(room, me.id));
 	const localStream = useRef<MediaStream | undefined>(undefined);
@@ -122,7 +121,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 			console.log("Created peer connection", videoTelegraphy.peerConnection);
 
-			videoTelegraphy.peerConnection.onicegatheringstatechange = (event) => {
+			videoTelegraphy.peerConnection.onicegatheringstatechange = () => {
 				console.log("ICE gathering state changed:", videoTelegraphy.peerConnection!.iceGatheringState);
 			};
 
@@ -130,12 +129,8 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 				videoTelegraphy.emitEvent({ type: "candidate", candidate: event.candidate!, room });
 			};
 
-			videoTelegraphy.peerConnection.onsignalingstatechange = async (event) => {
+			videoTelegraphy.peerConnection.onsignalingstatechange = (event) => {
 				console.log("Signaling state changed:", videoTelegraphy.peerConnection!.signalingState);
-				console.log(answer);
-				if (videoTelegraphy.peerConnection?.signalingState === "stable" && Boolean(answer)) {
-					await videoTelegraphy.peerConnection?.setRemoteDescription(new RTCSessionDescription(answer));
-				}
 			};
 
 			videoTelegraphy.peerConnection.ontrack = (event) => {
@@ -149,7 +144,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 					.forEach((track) => videoTelegraphy.peerConnection!.addTrack(track, localStream.current!));
 			}
 		},
-		[answer, handleRemoteStream, room, setUpLocalStream, videoTelegraphy],
+		[handleRemoteStream, room, setUpLocalStream, videoTelegraphy],
 	);
 
 	const joinedRoomHandler = useCallback(
@@ -175,9 +170,23 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 		[createPeerConnection, videoTelegraphy],
 	);
 
-	const answerHandler = useCallback((args: ServerAnswerData) => {
-		setAnswer(new RTCSessionDescription(args.answer));
-	}, []);
+	const answerHandler = useCallback(
+		async (args: ServerAnswerData) => {
+			if (!videoTelegraphy.peerConnection) return;
+
+			if (videoTelegraphy.peerConnection.signalingState === "have-local-offer") {
+				await videoTelegraphy.peerConnection.setRemoteDescription(new RTCSessionDescription(args.answer));
+			} else if (videoTelegraphy.peerConnection.signalingState === "stable") {
+				console.warn("Received answer but signaling state is already stable");
+			} else {
+				console.warn(
+					"Cannot set remote description. Invalid signaling state:",
+					videoTelegraphy.peerConnection.signalingState,
+				);
+			}
+		},
+		[videoTelegraphy.peerConnection],
+	);
 
 	const candidateHandler = useCallback(
 		async (args: ServerCandidateData) => {

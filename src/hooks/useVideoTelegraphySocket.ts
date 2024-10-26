@@ -7,6 +7,7 @@ import {
 	ServerAnswerData,
 	ServerCandidateData,
 	ServerOfferData,
+	ServerTranslatedData,
 	VideoTelegraphyServerEventMap,
 } from "@/utils/videoTelegraphy/types";
 import VideoTelegraphySocket, { SIGNALING_SERVER_URL } from "@/utils/videoTelegraphy/videoTelegraphySocket";
@@ -18,7 +19,11 @@ interface JoinedRoomArgs {
 	oppositeVideoElement: HTMLVideoElement;
 }
 
-interface EventListenerArgs extends JoinedRoomArgs {}
+interface TranslatedArgs {
+	translatedCallback: (args: ServerTranslatedData) => void;
+}
+
+type EventListenerArgs = JoinedRoomArgs & TranslatedArgs;
 
 export interface ReturnUseVideoTelegraphySocket {
 	connectState: number;
@@ -27,6 +32,7 @@ export interface ReturnUseVideoTelegraphySocket {
 	createWebSocket: () => void;
 	joinRoom: () => void;
 	leaveRoom: () => void;
+	sendTranslation: (message: string) => void;
 	addEventListener: (args: EventListenerArgs) => void;
 	close: () => void;
 }
@@ -80,6 +86,13 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	const leaveRoom = useCallback(() => {
 		videoTelegraphy.leaveRoom();
 	}, [videoTelegraphy]);
+
+	const sendTranslation = useCallback(
+		(message: string) => {
+			videoTelegraphy.sendTranslation(message);
+		},
+		[videoTelegraphy],
+	);
 
 	const setUpLocalStream = useCallback(async (el: HTMLVideoElement) => {
 		try {
@@ -194,6 +207,11 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 		[room, videoTelegraphy],
 	);
 
+	const translatedHandler = useCallback((args: VideoTelegraphyServerEventMap["translated"] & TranslatedArgs) => {
+		if (!args.message) return;
+		args.translatedCallback({ message: args.message });
+	}, []);
+
 	const close = useCallback(() => {
 		videoTelegraphy.close();
 	}, [videoTelegraphy]);
@@ -230,6 +248,10 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 						await candidateHandler(data as ServerCandidateData);
 						break;
 
+					case `translated-${me.id}-${room}`:
+						translatedHandler({ ...data, callback: args.translatedCallback });
+						break;
+
 					case "participantLeft":
 						participantLeftHandler({
 							...data,
@@ -247,14 +269,18 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 			answerHandler,
 			candidateHandler,
 			joinedRoomHandler,
+			me.id,
 			offerHandler,
 			participantLeftHandler,
+			room,
+			translatedHandler,
 			videoTelegraphy.webSocket,
 		],
 	);
 
 	return {
 		connectState,
+		sendTranslation,
 		createWebSocket,
 		createRoom,
 		addEventListener,

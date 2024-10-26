@@ -32,6 +32,10 @@ class VideoTelegraphySocket {
 		this.emitEvent({ type: "leaveRoom", room: this.#room });
 	}
 
+	sendTranslation(message: string) {
+		this.emitEvent({ type: "translation", message, room: this.#room });
+	}
+
 	createPeerConnection(handleRemoteStream: (event: RTCTrackEvent) => void) {
 		this.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
 

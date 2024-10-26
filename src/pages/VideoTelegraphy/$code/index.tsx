@@ -23,7 +23,8 @@ const VideoTelegraphyPage: React.FC = () => {
 	const [translated, setTranslated] = useState<string>("");
 	const { addToast } = useToast();
 	const { data, refetch } = useGetRoomQuery(code);
-	const { connectState, addEventListener, joinRoom, leaveRoom, createWebSocket, close } = useVideoTelegraphy();
+	const { connectState, sendTranslation, addEventListener, joinRoom, leaveRoom, createWebSocket, close } =
+		useVideoTelegraphy();
 
 	const user1Id = data?.data.user1Id;
 	const user2Id = data?.data.user2Id;
@@ -35,10 +36,13 @@ const VideoTelegraphyPage: React.FC = () => {
 	const { height } = useElementSize(localVideo);
 	const translatedStyle = { "--top": `${height / 2}px` } as CSSProperties;
 
-	const handleTranslation = useCallback((data: TranslationData) => {
-		if (!data.result) return;
-		setTranslated(data.result);
-	}, []);
+	const handleTranslation = useCallback(
+		(data: TranslationData) => {
+			if (!data.result) return;
+			sendTranslation(data.result);
+		},
+		[sendTranslation],
+	);
 
 	const { startTranslation, stopTranslation } = useTranslation(handleTranslation);
 
@@ -90,6 +94,7 @@ const VideoTelegraphyPage: React.FC = () => {
 		addEventListener({
 			localVideoElement: localVideo.current!,
 			oppositeVideoElement: remoteVideo.current!,
+			translatedCallback: ({ message }) => setTranslated(message),
 		});
 		leaveRoom();
 		joinRoom();

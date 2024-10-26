@@ -42,9 +42,14 @@ export interface ServerCandidateData {
 	candidate: RTCIceCandidate;
 }
 
+export interface ServerTranslatedData {
+	message: string;
+}
+
 export interface VideoTelegraphyServerEventMap {
 	joinedRoom: ServerJoinedRoomData;
 	participantLeft: ServerParticipantLeftData;
+	translated: ServerTranslatedData;
 	roomList: ServerRoomListData;
 	error: ServerErrorData;
 	offer: ServerOfferData;
@@ -69,7 +74,8 @@ export type VideoTelegraphyClientEvents =
 	| "leaveRoom"
 	| "offer"
 	| "answer"
-	| "candidate";
+	| "candidate"
+	| "translation";
 
 interface ClientJoinRoomData {
 	room: string;
@@ -94,12 +100,18 @@ interface ClientCandidateData {
 	candidate: RTCIceCandidate;
 }
 
+interface ClientTranslationData {
+	room: string;
+	message: string;
+}
+
 export interface VideoTelegraphyClientEventMap {
 	joinRoom: ClientJoinRoomData;
 	leaveRoom: ClientLeaveRoom;
 	offer: ClientOfferData;
 	answer: ClientAnswerData;
 	candidate: ClientCandidateData;
+	translation: ClientTranslationData;
 	getRooms: {};
 	createRoom: {};
 }

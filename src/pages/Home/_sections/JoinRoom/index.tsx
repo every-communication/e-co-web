@@ -6,7 +6,7 @@ import TextPrimaryButton from "@/components/Common/Button/TextPrimaryButton";
 import Input from "@/components/Common/Input";
 import { useToast } from "@/hooks";
 import { useRoomValidateMutation } from "@/queries/videoTelegraphy/mutations";
-import { getKyHTTPError, isKyHTTPError } from "@/services/apiClient";
+import { isKyHTTPError } from "@/services/apiClient";
 
 import styles from "./joinRoom.module.scss";
 
@@ -18,6 +18,7 @@ const JoinRoom: React.FC = () => {
 	const {
 		register,
 		handleSubmit,
+		setValue,
 		formState: { isSubmitting, isDirty },
 	} = useForm<{ code: string }>();
 
@@ -39,6 +40,7 @@ const JoinRoom: React.FC = () => {
 				inputMode="text"
 				type="text"
 				className={styles.input}
+				onClickClearButton={() => setValue("code", "")}
 				{...register("code")}
 			/>
 			<TextPrimaryButton type="submit" size="medium" disabled={!isDirty || isSubmitting}>

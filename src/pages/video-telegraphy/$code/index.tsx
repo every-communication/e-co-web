@@ -55,7 +55,7 @@ const VideoTelegraphyPage: React.FC = () => {
 	}, [addEventListener, connectState, joinRoom, leaveRoom]);
 
 	return (
-		<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 1 })}>
+		<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>
 			<video ref={localVideo} className={styles.localVideo} />
 			<video ref={remoteVideo} className={styles.remoteVideo} />
 		</HeightFitLayout>

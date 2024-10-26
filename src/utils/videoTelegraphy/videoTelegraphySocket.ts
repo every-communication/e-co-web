@@ -48,15 +48,22 @@ class VideoTelegraphySocket {
 	}
 
 	createPeerConnection(handleRemoteStream: (event: RTCTrackEvent) => void) {
+		console.log("createPeerConnection...");
 		this.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
-		this.peerConnection.onicecandidate = (event) => {
-			if (event.candidate) {
-				this.emitEvent({ type: "candidate", candidate: event.candidate, room: this.#room });
-			}
+
+		this.peerConnection.onicegatheringstatechange = (event) => {
+			console.log("ICE gathering state changed:", this.peerConnection!.iceGatheringState);
 		};
+
+		this.peerConnection.onicecandidate = (event) => {
+			this.emitEvent({ type: "candidate", candidate: event.candidate!, room: this.#room });
+		};
+
 		this.peerConnection.ontrack = (event) => {
 			handleRemoteStream(event);
 		};
+
+		console.log(this.peerConnection);
 	}
 
 	checkIsWebSocketOpen() {

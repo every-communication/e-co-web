@@ -2,7 +2,6 @@
 import { useCallback, useRef, useState } from "react";
 
 import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
-import { useGetRoomQuery } from "@/queries/videoTelegraphy/queries";
 import {
 	BaseVideoTelegraphyServerEvent,
 	ServerAnswerData,
@@ -40,8 +39,6 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	const localStream = useRef<MediaStream | undefined>(undefined);
 
 	const [connectState, setConnectState] = useState<number>(WebSocket.CLOSED);
-
-	const { refetch: getRoom } = useGetRoomQuery(room);
 
 	const createWebSocket = useCallback(() => {
 		videoTelegraphy.webSocket = new WebSocket(SIGNALING_SERVER_URL);

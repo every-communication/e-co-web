@@ -1,6 +1,6 @@
 import { range } from "lodash-es";
 
-import { useSearchFriendsSuspenseQuery } from "@/queries/friends/quries";
+import { useSearchFriendsSuspenseQuery } from "@/queries/friends/queries";
 
 import HorizontalFriend, { LoadingHorizontalFriend } from "../Horizontal";
 

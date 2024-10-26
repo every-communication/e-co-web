@@ -1,8 +1,12 @@
 import HorizontalFriend from "@/components/Friend/Horizontal";
-import { useGetRequestedFriendsSuspenseQuery } from "@/queries/friends/quries";
+import { useGetRequestedFriendsSuspenseQuery } from "@/queries/friends/queries";
+
+import Empty from "./Empty";
 
 const RequestedFriendList: React.FC = () => {
 	const { data } = useGetRequestedFriendsSuspenseQuery();
+
+	if (data.data.length === 0) return <Empty />;
 
 	return (
 		<ul>

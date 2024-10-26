@@ -1,0 +1,29 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex(center, center, column);
+	padding: 32px;
+
+	.iconWrapper {
+		@include m.flex;
+		width: 64px;
+		height: 64px;
+		margin-bottom: 16px;
+		background-color: var(--c-g-light-blue-95);
+		border-radius: 50%;
+	}
+
+	.title {
+		@include m.fontHeadline1("bold");
+		margin-bottom: 8px;
+		color: var(--c-label-normal);
+	}
+
+	.description {
+		@include m.fontLabel1Normal("regular");
+		margin-bottom: 24px;
+		color: var(--c-line-normal-normal);
+		white-space: pre-wrap;
+	}
+}

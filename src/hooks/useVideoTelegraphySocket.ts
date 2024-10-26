@@ -9,7 +9,6 @@ import {
 	ServerCandidateData,
 	ServerOfferData,
 	VideoTelegraphyServerEventMap,
-	VideoTelegraphyServerEvents,
 } from "@/utils/videoTelegraphy/types";
 import VideoTelegraphySocket, { SIGNALING_SERVER_URL } from "@/utils/videoTelegraphy/videoTelegraphySocket";
 
@@ -42,7 +41,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const [connectState, setConnectState] = useState<number>(WebSocket.CLOSED);
 
-	const { data: roomInfo, refetch: getRoom } = useGetRoomQuery(room);
+	const { refetch: getRoom } = useGetRoomQuery(room);
 
 	const createWebSocket = useCallback(() => {
 		videoTelegraphy.webSocket = new WebSocket(SIGNALING_SERVER_URL);
@@ -93,7 +92,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 				audio: true,
 			});
 			localStream.current = localMediaStream;
-			el.srcObject = localMediaStream;
+			el.srcObject = localStream.current;
 			el.autoplay = true;
 			el.muted = true;
 
@@ -105,6 +104,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const handleRemoteStream = useCallback(
 		(el: HTMLVideoElement) => (event: RTCTrackEvent) => {
+			console.log({ remoteStream: el, event });
 			el.srcObject = event.streams[0];
 			el.playsInline = true;
 			el.autoplay = true;
@@ -115,6 +115,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const createPeerConnection = useCallback(
 		async (args: JoinedRoomArgs) => {
+			console.log("Creating peer connection");
 			videoTelegraphy.createPeerConnection(handleRemoteStream(args.oppositeVideoElement));
 			await setUpLocalStream(args.localVideoElement);
 			if (localStream.current) {
@@ -128,17 +129,17 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const joinedRoomHandler = useCallback(
 		async (data: BaseVideoTelegraphyServerEvent<"joinedRoom"> & JoinedRoomArgs) => {
-			await getRoom();
-			if (!roomInfo) return;
-			const { user1Id, user2Id } = roomInfo.data;
+			const { data: roomInfoData } = await getRoom();
+			if (!roomInfoData) return;
+			const { user1Id, user2Id } = roomInfoData.data;
 			await setUpLocalStream(data.localVideoElement);
 			window.dispatchEvent(new CustomEvent(JOINED_ROOM_EVENT_NAME));
 			if (user1Id && user2Id) {
 				createPeerConnection(data);
-				videoTelegraphy.sendOffer();
+				if (user1Id === me.id) videoTelegraphy.sendOffer();
 			}
 		},
-		[createPeerConnection, getRoom, roomInfo, setUpLocalStream, videoTelegraphy],
+		[createPeerConnection, getRoom, me.id, setUpLocalStream, videoTelegraphy],
 	);
 
 	const offerHandler = useCallback(

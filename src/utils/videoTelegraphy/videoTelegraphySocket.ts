@@ -47,10 +47,16 @@ class VideoTelegraphySocket {
 		this.emitEvent({ type: "answer", answer, room: this.#room });
 	}
 
-	createPeerConnection(handleRemoteStream: RTCPeerConnection["ontrack"]) {
+	createPeerConnection(handleRemoteStream: (event: RTCTrackEvent) => void) {
 		this.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
-		this.peerConnection.onicecandidate = this.onIceCandidate;
-		this.peerConnection.ontrack = handleRemoteStream;
+		this.peerConnection.onicecandidate = (event) => {
+			if (event.candidate) {
+				this.emitEvent({ type: "candidate", candidate: event.candidate, room: this.#room });
+			}
+		};
+		this.peerConnection.ontrack = (event) => {
+			handleRemoteStream(event);
+		};
 	}
 
 	checkIsWebSocketOpen() {
@@ -68,12 +74,6 @@ class VideoTelegraphySocket {
 	close() {
 		this.webSocket?.close();
 		this.peerConnection?.close();
-	}
-
-	private onIceCandidate(event: RTCPeerConnectionIceEvent) {
-		if (event.candidate) {
-			this.emitEvent({ type: "candidate", candidate: event.candidate, room: this.#room });
-		}
 	}
 
 	private emitEvent<T extends VideoTelegraphyClientEvents>(data: VideoTelegraphyClientEventData<T>) {

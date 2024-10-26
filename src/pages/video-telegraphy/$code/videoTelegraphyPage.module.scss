@@ -33,8 +33,8 @@ $PC_GAP: 20px;
 	&.allParticipated {
 		.localVideo {
 			@include m.absolute(auto calc(40px + $PC_GAP) calc(120px + $PC_GAP) auto);
-			width: 120px;
-			height: 120px;
+			width: 200px;
+			height: 200px;
 			object-fit: cover;
 		}
 

@@ -32,6 +32,7 @@ const VideoTelegraphyPage: React.FC = () => {
 	useEffect(() => {
 		const handler = () => {
 			refetch();
+			console.log("joined");
 		};
 
 		window.addEventListener(JOINED_ROOM_EVENT_NAME, handler);

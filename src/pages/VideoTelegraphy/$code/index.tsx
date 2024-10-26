@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 import { useNavigate, useParams } from "@tanstack/react-router";
 import cx from "clsx";
@@ -9,6 +9,8 @@ import { IconCamera, IconCopy, IconMic, IconPhoneOff } from "@/assets/icons/vide
 import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
 import { useToast } from "@/hooks";
+import useElementSize from "@/hooks/useElementSize";
+import useTranslation, { TranslationData } from "@/hooks/useTranslation";
 import { useVideoTelegraphy } from "@/hooks/useVideoTelegraphy";
 import { useGetRoomQuery } from "@/queries/videoTelegraphy/queries";
 
@@ -18,6 +20,7 @@ const VideoTelegraphyPage: React.FC = () => {
 	const { code } = useParams({ from: "/video-telegraphy/$code" });
 	const navigate = useNavigate();
 
+	const [translated, setTranslated] = useState<string>("");
 	const { addToast } = useToast();
 	const { data, refetch } = useGetRoomQuery(code);
 	const { connectState, addEventListener, joinRoom, leaveRoom, createWebSocket, close } = useVideoTelegraphy();
@@ -29,9 +32,20 @@ const VideoTelegraphyPage: React.FC = () => {
 	const localVideo = useRef<HTMLVideoElement>(null);
 	const remoteVideo = useRef<HTMLVideoElement>(null);
 
+	const { height } = useElementSize(localVideo);
+	const translatedStyle = { "--top": `${height / 2}px` } as CSSProperties;
+
+	const handleTranslation = useCallback((data: TranslationData) => {
+		if (!data.result) return;
+		setTranslated(data.result);
+	}, []);
+
+	const { startTranslation, stopTranslation } = useTranslation(handleTranslation);
+
 	const onClickEndCall = () => {
 		leaveRoom();
 		close();
+		stopTranslation();
 		navigate({ to: "/", replace: true });
 	};
 
@@ -47,6 +61,14 @@ const VideoTelegraphyPage: React.FC = () => {
 	useEffect(() => {
 		createWebSocket();
 	}, [createWebSocket]);
+
+	useEffect(() => {
+		startTranslation(localVideo.current);
+
+		return () => {
+			stopTranslation();
+		};
+	}, [handleTranslation, startTranslation, stopTranslation]);
 
 	useEffect(() => {
 		const handler = () => {
@@ -84,6 +106,11 @@ const VideoTelegraphyPage: React.FC = () => {
 				CODE {code}
 				<IconCopy />
 			</button>
+			{translated && (
+				<div className={styles.translated} style={translatedStyle}>
+					{translated}
+				</div>
+			)}
 			<video ref={localVideo} className={styles.localVideo} />
 			<video ref={remoteVideo} className={styles.remoteVideo} />
 			<div className={styles.menu}>

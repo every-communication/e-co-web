@@ -185,12 +185,13 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	const participantLeftHandler = useCallback(
 		(args: VideoTelegraphyServerEventMap["participantLeft"] & JoinedRoomArgs) => {
+			if (args.room.code !== room) return;
 			window.dispatchEvent(new CustomEvent(LEFT_ROOM_EVENT_NAME));
 			videoTelegraphy.peerConnection?.close();
 			videoTelegraphy.peerConnection = null;
 			args.oppositeVideoElement.srcObject = null;
 		},
-		[videoTelegraphy],
+		[room, videoTelegraphy],
 	);
 
 	const close = useCallback(() => {

@@ -11,4 +11,5 @@ export default {
 	PORT: getConfig("PORT"),
 	API_URL: getConfig("API_URL"),
 	SIGNALING_API_URL: getConfig("SIGNALING_API_URL"),
+	TRANSLATION_API_URL: getConfig("TRANSLATION_API_URL"),
 };

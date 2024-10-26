@@ -9,7 +9,10 @@ import {
 	ServerOfferData,
 	VideoTelegraphyServerEventMap,
 } from "@/utils/videoTelegraphy/types";
-import VideoTelegraphySocket, { SIGNALING_SERVER_URL } from "@/utils/videoTelegraphy/videoTelegraphySocket";
+import VideoTelegraphySocket, {
+	ICE_STUN_SERVER,
+	SIGNALING_SERVER_URL,
+} from "@/utils/videoTelegraphy/videoTelegraphySocket";
 
 import useMe from "./useMe";
 
@@ -34,6 +37,7 @@ export interface ReturnUseVideoTelegraphySocket {
 // TODO: update
 export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphySocket => {
 	const { me } = useMe();
+	const [answer, setAnswer] = useState<RTCSessionDescription | null>(null);
 	const [reconnectCount, setReconnectCount] = useState(0);
 	const [videoTelegraphy] = useState(() => new VideoTelegraphySocket(room, me.id));
 	const localStream = useRef<MediaStream | undefined>(undefined);
@@ -113,7 +117,31 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	const createPeerConnection = useCallback(
 		async (args: JoinedRoomArgs) => {
 			console.log("Creating peer connection");
-			videoTelegraphy.createPeerConnection(handleRemoteStream(args.oppositeVideoElement));
+
+			videoTelegraphy.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
+
+			console.log("Created peer connection", videoTelegraphy.peerConnection);
+
+			videoTelegraphy.peerConnection.onicegatheringstatechange = (event) => {
+				console.log("ICE gathering state changed:", videoTelegraphy.peerConnection!.iceGatheringState);
+			};
+
+			videoTelegraphy.peerConnection.onicecandidate = (event) => {
+				videoTelegraphy.emitEvent({ type: "candidate", candidate: event.candidate!, room });
+			};
+
+			videoTelegraphy.peerConnection.onsignalingstatechange = async (event) => {
+				console.log("Signaling state changed:", videoTelegraphy.peerConnection!.signalingState);
+				console.log(answer);
+				if (videoTelegraphy.peerConnection?.signalingState === "stable" && Boolean(answer)) {
+					await videoTelegraphy.peerConnection?.setRemoteDescription(new RTCSessionDescription(answer));
+				}
+			};
+
+			videoTelegraphy.peerConnection.ontrack = (event) => {
+				handleRemoteStream(args.oppositeVideoElement)(event);
+			};
+
 			await setUpLocalStream(args.localVideoElement);
 			if (localStream.current) {
 				localStream.current
@@ -121,7 +149,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 					.forEach((track) => videoTelegraphy.peerConnection!.addTrack(track, localStream.current!));
 			}
 		},
-		[handleRemoteStream, setUpLocalStream, videoTelegraphy],
+		[answer, handleRemoteStream, room, setUpLocalStream, videoTelegraphy],
 	);
 
 	const joinedRoomHandler = useCallback(
@@ -147,12 +175,9 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 		[createPeerConnection, videoTelegraphy],
 	);
 
-	const answerHandler = useCallback(
-		async (args: ServerAnswerData) => {
-			await videoTelegraphy.peerConnection?.setRemoteDescription(new RTCSessionDescription(args.answer));
-		},
-		[videoTelegraphy.peerConnection],
-	);
+	const answerHandler = useCallback((args: ServerAnswerData) => {
+		setAnswer(new RTCSessionDescription(args.answer));
+	}, []);
 
 	const candidateHandler = useCallback(
 		async (args: ServerCandidateData) => {
@@ -200,7 +225,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 						break;
 
 					case "answer":
-						await answerHandler(data as ServerAnswerData);
+						answerHandler(data as ServerAnswerData);
 						break;
 
 					case "candidate":

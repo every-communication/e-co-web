@@ -249,7 +249,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 						break;
 
 					case `translated-${me.id}-${room}`:
-						translatedHandler({ ...data, callback: args.translatedCallback });
+						translatedHandler({ ...data, translatedCallback: args.translatedCallback });
 						break;
 
 					case "participantLeft":

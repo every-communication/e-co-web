@@ -7,6 +7,7 @@ export const registerSchema = z
 		password: z.string().min(1, "비밀번호를 입력해주세요."),
 		passwordConfirm: z.string().min(1, "비밀번호를 입력해주세요."),
 		userType: z.enum(["DEAF", "NONDEAF"]),
+		thumbnail: z.string().optional(),
 	})
 	.refine(({ password, passwordConfirm }) => password === passwordConfirm, {
 		message: "비밀번호가 일치하지 않습니다.",

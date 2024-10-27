@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import { ChangeEventHandler, MouseEventHandler } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +8,7 @@ import { IconChevronLeft } from "@/assets/icons/common";
 import Avatar from "@/components/Common/Avatar";
 import IconButton from "@/components/Common/Button/IconButton";
 import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
+import Dropzone from "@/components/Common/Dropzone";
 import Input from "@/components/Common/Input";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
 import UserTypeChecker from "@/components/User/UserTypeChecker";
@@ -42,6 +43,12 @@ const RegisterPage: React.FC = () => {
 		setValue(name, "", { shouldValidate: true });
 	};
 
+	const onDrop = (files: File[]) => {
+		if (files.length !== 1) return;
+		const file = files[0];
+		return URL.createObjectURL(file);
+	};
+
 	const onSubmit: SubmitHandler<RegisterSchema> = async (data) => {
 		try {
 			const { data: resultMessage } = await signUp(data);
@@ -71,7 +78,23 @@ const RegisterPage: React.FC = () => {
 					</Link>
 				</div>
 				<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-					<Avatar size={100} />
+					<Controller
+						name="thumbnail"
+						control={control}
+						render={({ field: { value, onChange } }) => (
+							<Dropzone
+								options={{
+									onDrop: (files) => onChange(onDrop(files)),
+									multiple: false,
+									noDragEventsBubbling: true,
+									accept: { "image/png": [], "image/jpeg": [] },
+								}}
+							>
+								<Avatar size={100} src={value} hasEdit />
+							</Dropzone>
+						)}
+					/>
+
 					<Input
 						label="이메일"
 						type="text"

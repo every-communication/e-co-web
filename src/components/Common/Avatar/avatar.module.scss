@@ -2,8 +2,23 @@
 @use "src/styles/mixins" as m;
 
 .wrapper {
+	position: relative;
 	width: var(--size);
 	height: var(--size);
-	object-fit: cover;
-	border-radius: 50%;
+
+	.image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 50%;
+	}
+
+	.editButton {
+		@include m.absolute(auto 0 0 auto);
+		@include m.flex;
+		width: 28px;
+		height: 28px;
+		background-color: var(--c-label-disable);
+		border-radius: 50%;
+	}
 }

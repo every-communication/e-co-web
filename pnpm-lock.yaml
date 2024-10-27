@@ -56,6 +56,9 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      react-dropzone:
+        specifier: ^14.2.10
+        version: 14.2.10(react@18.3.1)
       react-hook-form:
         specifier: ^7.52.2
         version: 7.52.2(react@18.3.1)
@@ -1087,6 +1090,10 @@ packages:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
 
+  attr-accept@2.2.4:
+    resolution: {integrity: sha512-2pA6xFIbdTUDCAwjN8nQwI+842VwzbDUXO2IYlpPXQIORgKnavorcr4Ce3rwh+zsNg9zK7QPsdvDj3Lum4WX4w==}
+    engines: {node: '>=4'}
+
   autoprefixer@10.4.20:
     resolution: {integrity: sha512-XY25y5xSv/wEoqzDyXXME4AFfkZI0P23z6Fs3YgymDnKJkCGOnkL0iTxCa85UTqaSgfcqyf3UA6+c7wUvx/16g==}
     engines: {node: ^10 || ^12 || >=14}
@@ -1715,6 +1722,10 @@ packages:
   file-entry-cache@9.0.0:
     resolution: {integrity: sha512-6MgEugi8p2tiUhqO7GnPsmbCCzj0YRCwwaTbpGRyKZesjRSzkqkAE9fPp7V2yMs5hwfgbQLgdvSSkGNg1s5Uvw==}
     engines: {node: '>=18'}
+
+  file-selector@0.6.0:
+    resolution: {integrity: sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==}
+    engines: {node: '>= 12'}
 
   fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
@@ -2608,6 +2619,12 @@ packages:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
       react: ^18.3.1
+
+  react-dropzone@14.2.10:
+    resolution: {integrity: sha512-Y98LOCYxGO2jOFWREeKJlL7gbrHcOlTBp+9DCM1dh9XQ8+P/8ThhZT7kFb05C+bPcTXq/rixpU+5+LzwYrFLUw==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
 
   react-hook-form@7.52.2:
     resolution: {integrity: sha512-pqfPEbERnxxiNMPd0bzmt1tuaPcVccywFDpyk2uV5xCIBphHV5T8SVnX9/o3kplPE1zzKt77+YIoq+EMwJp56A==}
@@ -4277,6 +4294,8 @@ snapshots:
 
   astral-regex@2.0.0: {}
 
+  attr-accept@2.2.4: {}
+
   autoprefixer@10.4.20(postcss@8.4.41):
     dependencies:
       browserslist: 4.23.3
@@ -5151,6 +5170,10 @@ snapshots:
     dependencies:
       flat-cache: 5.0.0
 
+  file-selector@0.6.0:
+    dependencies:
+      tslib: 2.6.3
+
   fill-range@7.1.1:
     dependencies:
       to-regex-range: 5.0.1
@@ -6014,6 +6037,13 @@ snapshots:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+
+  react-dropzone@14.2.10(react@18.3.1):
+    dependencies:
+      attr-accept: 2.2.4
+      file-selector: 0.6.0
+      prop-types: 15.8.1
+      react: 18.3.1
 
   react-hook-form@7.52.2(react@18.3.1):
     dependencies:

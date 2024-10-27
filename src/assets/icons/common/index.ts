@@ -9,3 +9,6 @@ export { default as IconClose } from "./close.svg?react";
 
 // MEMO: PLUS
 export { default as IconPlus } from "./plus.svg?react";
+
+// MEMO: AVATAR
+export { default as IconPencil } from "./pencil.svg?react";

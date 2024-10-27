@@ -1,7 +1,5 @@
-import { type ReactNode, useEffect, useLayoutEffect, useRef } from "react";
+import { type ReactNode, useLayoutEffect, useRef } from "react";
 import { useWindowSize } from "react-use";
-
-import { useMe } from "@/hooks";
 
 import styles from "./rootLayout.module.scss";
 
@@ -10,13 +8,8 @@ interface Props {
 }
 
 const RootLayout: React.FC<Props> = ({ children }) => {
-	const { refetchMe } = useMe();
 	const layoutRef = useRef<HTMLDivElement>(null);
 	const { height } = useWindowSize();
-
-	useEffect(() => {
-		refetchMe();
-	}, [refetchMe]);
 
 	useLayoutEffect(() => {
 		if (!layoutRef.current) return;

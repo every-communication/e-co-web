@@ -49,6 +49,8 @@ jobs:
         run: |
           echo "VITE_PORT=${{ secrets.VITE_PORT }}" >> ${{ github.workspace }}/env/.env.development
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> ${{ github.workspace }}/env/.env.development
+          echo "VITE_SIGNALING_API_URL=${{ secrets.VITE_SIGNALING_API_URL }}" >> ${{ github.workspace }}/env/.env.development
+          echo "VITE_TRANSLATION_API_URL=${{ secrets.VITE_TRANSLATION_API_URL }}" >> ${{ github.workspace }}/env/.env.development
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2

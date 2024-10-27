@@ -1,13 +1,15 @@
-import type { VideoTelegraphyClientEventData, VideoTelegraphyClientEvents } from "./types";
+import type { CreateWebSocketArgs, VideoTelegraphyClientEventData, VideoTelegraphyClientEvents } from "./types";
 import config from "@/config";
 
-export const SIGNALING_SERVER_URL = config.SIGNALING_API_URL;
-export const MAX_RECONNECT_COUNT = 5;
+const MAX_RECONNECT_COUNT = 5;
+const SIGNALING_SERVER_URL = config.SIGNALING_API_URL;
+
 export const ICE_STUN_SERVER = "stun:stun.l.google.com:19302";
 
 class VideoTelegraphySocket {
 	#room: string;
 	#userId: number;
+	#reconnectCount = 0;
 	peerConnection: RTCPeerConnection | null = null;
 	webSocket: WebSocket | null = null;
 
@@ -36,6 +38,32 @@ class VideoTelegraphySocket {
 		this.emitEvent({ type: "translation", message, room: this.#room });
 	}
 
+	createWebSocket({ handleConnectState }: CreateWebSocketArgs) {
+		this.webSocket = new WebSocket(SIGNALING_SERVER_URL);
+
+		this.webSocket.onopen = () => {
+			this.#reconnectCount = 0;
+			handleConnectState("OPEN");
+		};
+
+		this.webSocket.onclose = () => {
+			handleConnectState("CLOSED");
+
+			if (this.#reconnectCount < MAX_RECONNECT_COUNT) {
+				this.#reconnectCount += 1;
+				setTimeout(() => this.createWebSocket({ handleConnectState }), 1000);
+			} else {
+				console.log("Max reconnect attempts reached");
+			}
+		};
+
+		this.webSocket.onerror = () => {
+			handleConnectState("CLOSING");
+			this.webSocket?.close();
+			this.createWebSocket({ handleConnectState });
+		};
+	}
+
 	createPeerConnection(handleRemoteStream: (event: RTCTrackEvent) => void) {
 		this.peerConnection = new RTCPeerConnection({ iceServers: [{ urls: ICE_STUN_SERVER }] });
 
@@ -46,6 +74,16 @@ class VideoTelegraphySocket {
 		};
 
 		this.peerConnection.ontrack = handleRemoteStream;
+	}
+
+	async setRemoteOfferDescription(offer: RTCSessionDescriptionInit) {
+		if (!this.checkIsPeerConnection(this.peerConnection)) return;
+		await this.peerConnection.setRemoteDescription(offer);
+	}
+
+	async setRemoteAnswerDescription(answer: RTCSessionDescriptionInit) {
+		if (!this.checkIsPeerConnection(this.peerConnection)) return;
+		await this.peerConnection.setRemoteDescription(answer);
 	}
 
 	async sendOffer() {
@@ -75,8 +113,23 @@ class VideoTelegraphySocket {
 	}
 
 	close() {
-		this.webSocket?.close();
-		this.peerConnection?.close();
+		if (this.peerConnection) {
+			this.peerConnection.getSenders().forEach((sender) => {
+				if (sender.track) {
+					sender.track.stop();
+				}
+			});
+
+			this.peerConnection.close();
+			this.peerConnection = null;
+		}
+
+		if (this.webSocket) {
+			if (this.webSocket.readyState === WebSocket.OPEN) {
+				this.webSocket.close();
+			}
+			this.webSocket = null;
+		}
 	}
 
 	emitEvent<T extends VideoTelegraphyClientEvents>(data: VideoTelegraphyClientEventData<T>) {

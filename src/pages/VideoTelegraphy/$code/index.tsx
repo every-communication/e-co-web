@@ -24,8 +24,17 @@ const VideoTelegraphyPage: React.FC = () => {
 	const [translated, setTranslated] = useState<string>("");
 	const { addToast } = useToast();
 	const { data, refetch } = useGetRoomQuery(code);
-	const { connectState, sendTranslation, addEventListener, joinRoom, leaveRoom, createWebSocket, close } =
-		useVideoTelegraphy();
+	const {
+		connectState,
+		setUpLocalStream,
+		clearLocalStream,
+		sendTranslation,
+		addEventListener,
+		joinRoom,
+		leaveRoom,
+		createWebSocket,
+		close,
+	} = useVideoTelegraphy();
 
 	const user1Id = data?.data.user1Id;
 	const user2Id = data?.data.user2Id;
@@ -50,6 +59,7 @@ const VideoTelegraphyPage: React.FC = () => {
 	const onClickEndCall = () => {
 		leaveRoom();
 		close();
+		clearLocalStream();
 		stopTranslation();
 		navigate({ to: "/", replace: true });
 	};
@@ -94,21 +104,32 @@ const VideoTelegraphyPage: React.FC = () => {
 	}, [refetch]);
 
 	useEffect(() => {
-		if (connectState !== WebSocket.OPEN) return;
+		if (connectState !== "OPEN" || !localVideo.current || !remoteVideo.current) return;
 
-		addEventListener({
-			localVideoElement: localVideo.current!,
-			oppositeVideoElement: remoteVideo.current!,
-			translatedCallback,
+		const localVideoElement = localVideo.current;
+		const oppositeVideoElement = remoteVideo.current;
+
+		setUpLocalStream(localVideoElement).then(() => {
+			addEventListener({ localVideoElement, oppositeVideoElement, translatedCallback });
+			leaveRoom();
+			joinRoom();
 		});
-		leaveRoom();
-		joinRoom();
 
 		return () => {
+			clearLocalStream();
 			leaveRoom();
 			close();
 		};
-	}, [addEventListener, close, connectState, joinRoom, leaveRoom, translatedCallback]);
+	}, [
+		addEventListener,
+		clearLocalStream,
+		close,
+		connectState,
+		joinRoom,
+		leaveRoom,
+		setUpLocalStream,
+		translatedCallback,
+	]);
 
 	return (
 		<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>

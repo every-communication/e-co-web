@@ -2,15 +2,16 @@
 import { useCallback, useRef, useState } from "react";
 
 import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
-import {
+import type {
 	BaseVideoTelegraphyServerEvent,
 	ServerAnswerData,
 	ServerCandidateData,
 	ServerOfferData,
 	ServerTranslatedData,
+	SocketConnectState,
 	VideoTelegraphyServerEventMap,
 } from "@/utils/videoTelegraphy/types";
-import VideoTelegraphySocket, { SIGNALING_SERVER_URL } from "@/utils/videoTelegraphy/videoTelegraphySocket";
+import VideoTelegraphySocket from "@/utils/videoTelegraphy/videoTelegraphySocket";
 
 import useMe from "./useMe";
 
@@ -26,7 +27,9 @@ interface TranslatedArgs {
 type EventListenerArgs = JoinedRoomArgs & TranslatedArgs;
 
 export interface ReturnUseVideoTelegraphySocket {
-	connectState: number;
+	connectState: SocketConnectState;
+	setUpLocalStream: (el: HTMLVideoElement) => Promise<MediaStream | undefined>;
+	clearLocalStream: () => void;
 	getRoomList: () => void;
 	createRoom: () => void;
 	createWebSocket: () => void;
@@ -39,37 +42,11 @@ export interface ReturnUseVideoTelegraphySocket {
 
 export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphySocket => {
 	const { me } = useMe();
-	const [reconnectCount, setReconnectCount] = useState(0);
+
 	const [videoTelegraphy] = useState(() => new VideoTelegraphySocket(room, me.id));
 	const localStream = useRef<MediaStream | undefined>(undefined);
 
-	const [connectState, setConnectState] = useState<number>(WebSocket.CLOSED);
-
-	const createWebSocket = useCallback(() => {
-		if (videoTelegraphy.webSocket) return;
-		videoTelegraphy.webSocket = new WebSocket(SIGNALING_SERVER_URL);
-
-		videoTelegraphy.webSocket.onopen = () => {
-			setReconnectCount(0);
-			setConnectState(WebSocket.OPEN);
-		};
-
-		videoTelegraphy.webSocket.onclose = () => {
-			setConnectState(WebSocket.CLOSED);
-
-			if (reconnectCount < 5) {
-				setReconnectCount((prev) => prev + 1);
-				setTimeout(() => createWebSocket(), 1000);
-			} else {
-				console.log("Max reconnect attempts reached");
-			}
-		};
-
-		videoTelegraphy.webSocket.onerror = (error) => {
-			console.error("WebSocket error:", error);
-			videoTelegraphy.webSocket?.close();
-		};
-	}, [reconnectCount, videoTelegraphy]);
+	const [connectState, setConnectState] = useState<SocketConnectState>("CLOSED");
 
 	const getRoomList = useCallback(() => {
 		videoTelegraphy.getRoomList();
@@ -94,6 +71,10 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 		[videoTelegraphy],
 	);
 
+	const createWebSocket = useCallback(() => {
+		videoTelegraphy.createWebSocket({ handleConnectState: setConnectState });
+	}, [videoTelegraphy]);
+
 	const setUpLocalStream = useCallback(async (el: HTMLVideoElement) => {
 		try {
 			const localMediaStream = await navigator.mediaDevices.getUserMedia({
@@ -105,9 +86,16 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 			el.autoplay = true;
 			el.muted = true;
 
-			return localStream;
+			return localMediaStream;
 		} catch (err) {
 			console.log(err);
+		}
+	}, []);
+
+	const clearLocalStream = useCallback(() => {
+		if (localStream.current) {
+			localStream.current.getTracks().forEach((track) => track.stop());
+			localStream.current = undefined;
 		}
 	}, []);
 
@@ -122,36 +110,35 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	);
 
 	const createPeerConnection = useCallback(
-		async (args: JoinedRoomArgs) => {
+		(args: JoinedRoomArgs) => {
 			videoTelegraphy.createPeerConnection(handleRemoteStream(args.oppositeVideoElement));
 
-			await setUpLocalStream(args.localVideoElement);
 			if (localStream.current) {
 				localStream.current
 					.getTracks()
 					.forEach((track) => videoTelegraphy.peerConnection!.addTrack(track, localStream.current!));
 			}
 		},
-		[handleRemoteStream, setUpLocalStream, videoTelegraphy],
+		[handleRemoteStream, videoTelegraphy],
 	);
 
 	const joinedRoomHandler = useCallback(
 		async (data: BaseVideoTelegraphyServerEvent<"joinedRoom"> & JoinedRoomArgs) => {
+			if (data.room.code !== room) return;
 			const { user1Id, user2Id } = data.room;
 			window.dispatchEvent(new CustomEvent(JOINED_ROOM_EVENT_NAME));
-			await setUpLocalStream(data.localVideoElement);
 			if (user1Id && user2Id) {
-				await createPeerConnection(data);
+				createPeerConnection(data);
 				await videoTelegraphy.sendOffer();
 			}
 		},
-		[createPeerConnection, setUpLocalStream, videoTelegraphy],
+		[createPeerConnection, room, videoTelegraphy],
 	);
 
 	const offerHandler = useCallback(
 		async (args: ServerOfferData & JoinedRoomArgs) => {
-			await createPeerConnection(args);
-			await videoTelegraphy.peerConnection?.setRemoteDescription(new RTCSessionDescription(args.offer));
+			createPeerConnection(args);
+			await videoTelegraphy.setRemoteOfferDescription(args.offer);
 			await videoTelegraphy.sendAnswer();
 		},
 		[createPeerConnection, videoTelegraphy],
@@ -164,29 +151,30 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 			const setRemoteDescription = async () => {
 				try {
 					await videoTelegraphy.peerConnection!.setRemoteDescription(new RTCSessionDescription(args.answer));
+					await videoTelegraphy.setRemoteAnswerDescription(args.answer);
 				} catch (error) {
 					console.error("Failed to set remote description:", error);
 				}
 			};
 
 			if (videoTelegraphy.peerConnection.signalingState === "have-local-offer") {
-				await setRemoteDescription();
-			} else if (videoTelegraphy.peerConnection.signalingState === "stable") {
-				console.warn("Received answer but signaling state is already stable");
-			} else {
-				console.warn(
-					"Cannot set remote description. Invalid signaling state:",
-					videoTelegraphy.peerConnection.signalingState,
-				);
-				videoTelegraphy.peerConnection.addEventListener("signalingstatechange", async () => {
-					if (videoTelegraphy.peerConnection?.signalingState === "stable") {
-						await setRemoteDescription();
-						videoTelegraphy.peerConnection.removeEventListener("signalingstatechange", setRemoteDescription);
-					}
-				});
+				void (await setRemoteDescription());
 			}
+
+			if (videoTelegraphy.peerConnection.signalingState === "stable") return;
+
+			videoTelegraphy.peerConnection.addEventListener("signalingstatechange", async () => {
+				if (videoTelegraphy.peerConnection?.signalingState === "stable") {
+					await setRemoteDescription();
+					videoTelegraphy.peerConnection.removeEventListener("signalingstatechange", setRemoteDescription);
+				}
+			});
+
+			return () => {
+				videoTelegraphy.peerConnection?.removeEventListener("signalingstatechange", setRemoteDescription);
+			};
 		},
-		[videoTelegraphy.peerConnection],
+		[videoTelegraphy],
 	);
 
 	const candidateHandler = useCallback(
@@ -280,6 +268,8 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 
 	return {
 		connectState,
+		setUpLocalStream,
+		clearLocalStream,
 		sendTranslation,
 		createWebSocket,
 		createRoom,

@@ -126,3 +126,9 @@ export type VideoTelegraphyClientEventData<T extends VideoTelegraphyClientEvents
 				type: T;
 			} & GetClientEventData<T>
 		: never;
+
+export type SocketConnectState = "OPEN" | "CLOSED" | "CONNECTING" | "CLOSING";
+
+export interface CreateWebSocketArgs {
+	handleConnectState: (state: SocketConnectState) => void;
+}

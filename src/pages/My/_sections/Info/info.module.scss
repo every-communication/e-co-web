@@ -1,0 +1,41 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex(flex-start, center);
+	gap: 12px;
+	width: 100%;
+	padding: 24px;
+	background-color: var(--c-background-normal-normal);
+	border-radius: 4px;
+
+	.info {
+		@include m.flex(flex-start, flex-start, column);
+		gap: 10px;
+
+		.name {
+			@include m.fontHeadline1("bold");
+			color: var(--c-label-normal);
+		}
+
+		.additionalInfo {
+			@include m.flex;
+			gap: 4px;
+
+			.email {
+				@include m.fontLabel1Normal("regular");
+				color: var(--c-line-normal-strong);
+			}
+
+			.google {
+				width: 24px;
+				height: 24px;
+				object-fit: contain;
+			}
+		}
+	}
+
+	.edit {
+		margin-left: auto;
+	}
+}

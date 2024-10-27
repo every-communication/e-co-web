@@ -2,11 +2,9 @@ import { Suspense } from "react";
 
 import { useSearch } from "@tanstack/react-router";
 
+import { FriendList, ReceivedFriendList, RequestedFriendList } from "./_sections";
 import Content, { LoadingContent } from "./Content";
 import FloatingButton from "./FloatingButton";
-import FriendList from "./FriendList";
-import ReceivedFriendList from "./ReceivedFriendList";
-import RequestedFriendList from "./RequestedFriendList";
 import TabBar from "./TabBar";
 
 import styles from "./friendsPage.module.scss";

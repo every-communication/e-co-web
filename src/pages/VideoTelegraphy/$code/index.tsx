@@ -116,7 +116,7 @@ const VideoTelegraphyPage: React.FC = () => {
 				CODE {code}
 				<IconCopy />
 			</button>
-			{translated && (
+			{translated && userCount === 2 && (
 				<div className={styles.translated} style={translatedStyle}>
 					{translated}
 				</div>

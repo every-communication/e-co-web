@@ -13,6 +13,7 @@ import useElementSize from "@/hooks/useElementSize";
 import useTranslation, { TranslationData } from "@/hooks/useTranslation";
 import { useVideoTelegraphy } from "@/hooks/useVideoTelegraphy";
 import { useGetRoomQuery } from "@/queries/videoTelegraphy/queries";
+import { ServerTranslatedData } from "@/utils/videoTelegraphy/types";
 
 import styles from "./videoTelegraphyPage.module.scss";
 
@@ -62,6 +63,10 @@ const VideoTelegraphyPage: React.FC = () => {
 		}
 	};
 
+	const translatedCallback = useCallback(({ message }: ServerTranslatedData) => {
+		setTranslated(message);
+	}, []);
+
 	useEffect(() => {
 		createWebSocket();
 	}, [createWebSocket]);
@@ -94,7 +99,7 @@ const VideoTelegraphyPage: React.FC = () => {
 		addEventListener({
 			localVideoElement: localVideo.current!,
 			oppositeVideoElement: remoteVideo.current!,
-			translatedCallback: ({ message }) => setTranslated(message),
+			translatedCallback,
 		});
 		leaveRoom();
 		joinRoom();
@@ -103,7 +108,7 @@ const VideoTelegraphyPage: React.FC = () => {
 			leaveRoom();
 			close();
 		};
-	}, [addEventListener, close, connectState, joinRoom, leaveRoom]);
+	}, [addEventListener, close, connectState, joinRoom, leaveRoom, translatedCallback]);
 
 	return (
 		<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>

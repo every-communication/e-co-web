@@ -134,32 +134,30 @@ const VideoTelegraphyPage: React.FC = () => {
 
 	return (
 		<AfterAuthorizedLayout>
-			<main>
-				<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>
-					<button type="button" className={styles.copy} onClick={copyCode}>
-						CODE {code}
-						<IconCopy />
-					</button>
-					{translated && userCount === 2 && (
-						<div className={styles.translated} style={translatedStyle}>
-							{translated}
-						</div>
-					)}
-					<video ref={localVideo} className={styles.localVideo} />
-					<video ref={remoteVideo} className={styles.remoteVideo} />
-					<div className={styles.menu}>
-						<button type="button" aria-label="toggle mic" className={styles.enabled}>
-							<IconMic />
-						</button>
-						<button type="button" aria-label="end call" className={styles.endCall} onClick={onClickEndCall}>
-							<IconPhoneOff />
-						</button>
-						<button type="button" aria-label="toggle camera" className={styles.enabled}>
-							<IconCamera />
-						</button>
+			<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>
+				<button type="button" className={styles.copy} onClick={copyCode}>
+					CODE {code}
+					<IconCopy />
+				</button>
+				{translated && userCount === 2 && (
+					<div className={styles.translated} style={translatedStyle}>
+						{translated}
 					</div>
-				</HeightFitLayout>
-			</main>
+				)}
+				<video ref={localVideo} className={styles.localVideo} />
+				<video ref={remoteVideo} className={styles.remoteVideo} />
+				<div className={styles.menu}>
+					<button type="button" aria-label="toggle mic" className={styles.enabled}>
+						<IconMic />
+					</button>
+					<button type="button" aria-label="end call" className={styles.endCall} onClick={onClickEndCall}>
+						<IconPhoneOff />
+					</button>
+					<button type="button" aria-label="toggle camera" className={styles.enabled}>
+						<IconCamera />
+					</button>
+				</div>
+			</HeightFitLayout>
 		</AfterAuthorizedLayout>
 	);
 };

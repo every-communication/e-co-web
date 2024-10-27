@@ -31,6 +31,7 @@ jobs:
           echo "VITE_PORT=${{ secrets.VITE_PORT }}" >> ${{ github.workspace }}/env/.env.production
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> ${{ github.workspace }}/env/.env.production
           echo "VITE_SIGNALING_API_URL=${{ secrets.VITE_SIGNALING_API_URL }}" >> ${{ github.workspace }}/env/.env.production
+          echo "VITE_TRANSLATION_API_URL=${{ secrets.VITE_TRANSLATION_API_URL }}" >> ${{ github.workspace }}/env/.env.production
 
       - name: install dependencies and build
         run: pnpm install --no-frozen-lockfile && pnpm run build:prod

@@ -2,6 +2,7 @@
 import { useCallback, useRef, useState } from "react";
 
 import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
+import { useToast } from "@/components/Common/Toast";
 import type {
 	BaseVideoTelegraphyServerEvent,
 	ServerAnswerData,
@@ -42,6 +43,7 @@ export interface ReturnUseVideoTelegraphySocket {
 
 export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphySocket => {
 	const { me } = useMe();
+	const { addToast } = useToast();
 
 	const [videoTelegraphy] = useState(() => new VideoTelegraphySocket(room, me.id));
 	const localStream = useRef<MediaStream | undefined>(undefined);
@@ -75,22 +77,31 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 		videoTelegraphy.createWebSocket({ handleConnectState: setConnectState });
 	}, [videoTelegraphy]);
 
-	const setUpLocalStream = useCallback(async (el: HTMLVideoElement) => {
-		try {
-			const localMediaStream = await navigator.mediaDevices.getUserMedia({
-				video: { width: { min: 1024, ideal: 1280, max: 1920 }, height: { min: 576, ideal: 720, max: 1080 } },
-				audio: true,
-			});
-			localStream.current = localMediaStream;
-			el.srcObject = localStream.current;
-			el.autoplay = true;
-			el.muted = true;
+	const setUpLocalStream = useCallback(
+		async (el: HTMLVideoElement) => {
+			try {
+				const localMediaStream = await navigator.mediaDevices.getUserMedia({
+					video: { width: { ideal: 1280, max: 1920 }, height: { ideal: 720, max: 1080 } },
+					audio: true,
+				});
+				localStream.current = localMediaStream;
+				el.srcObject = localStream.current;
+				el.autoplay = true;
+				el.muted = true;
 
-			return localMediaStream;
-		} catch (err) {
-			console.log(err);
-		}
-	}, []);
+				return localMediaStream;
+			} catch (err) {
+				if (err instanceof DOMException && err.name === "NotAllowedError") {
+					addToast({ message: "카메라 권한을 허용해주세요.", state: "negative" });
+				}
+				if (err instanceof DOMException && err.name === "OverconstrainedError") {
+					addToast({ message: "해당 카메라 해상도는 지원하지 않습니다.", state: "negative" });
+				}
+				console.log(err);
+			}
+		},
+		[addToast],
+	);
 
 	const clearLocalStream = useCallback(() => {
 		if (localStream.current) {

@@ -27,25 +27,6 @@
 			}
 		}
 
-		.section {
-			@include m.flex(flex-start, flex-start, column);
-			gap: 12px;
-			width: 100%;
-
-			&.recentCallSection {
-				flex: 1;
-
-				@include m.mobileOnly {
-					min-height: 200px;
-				}
-			}
-		}
-
-		.sectionTitle {
-			@include m.fontHeadline1("bold");
-			color: var(--c-label-normal);
-		}
-
 		&.right {
 			gap: 40px;
 		}

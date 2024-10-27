@@ -5,6 +5,7 @@ import { useMe } from "@/hooks";
 
 import styles from "./userType.module.scss";
 
+// FIXME: 정보 수정 기능
 const UserType: React.FC = () => {
 	const { me } = useMe();
 

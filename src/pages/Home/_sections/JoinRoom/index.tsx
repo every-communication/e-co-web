@@ -8,6 +8,8 @@ import { useToast } from "@/hooks";
 import { useRoomValidateMutation } from "@/queries/videoTelegraphy/mutations";
 import { isKyHTTPError } from "@/services/apiClient";
 
+import Section from "../Section";
+
 import styles from "./joinRoom.module.scss";
 
 const JoinRoom: React.FC = () => {
@@ -20,10 +22,11 @@ const JoinRoom: React.FC = () => {
 		handleSubmit,
 		setValue,
 		formState: { isSubmitting, isDirty },
-	} = useForm<{ code: string }>();
+	} = useForm<{ code: string }>({ defaultValues: { code: "" } });
 
 	const onSubmit: SubmitHandler<{ code: string }> = async (data) => {
 		try {
+			if (!data.code) return;
 			await roomValidate(data.code);
 			navigate({ to: `/video-telegraphy/$code`, params: { code: data.code } });
 		} catch (err) {
@@ -34,19 +37,21 @@ const JoinRoom: React.FC = () => {
 	};
 
 	return (
-		<form className={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
-			<Input
-				placeholder="코드를 입력하세요"
-				inputMode="text"
-				type="text"
-				className={styles.input}
-				onClickClearButton={() => setValue("code", "")}
-				{...register("code")}
-			/>
-			<TextPrimaryButton type="submit" size="medium" disabled={!isDirty || isSubmitting}>
-				접속
-			</TextPrimaryButton>
-		</form>
+		<Section title="방 접속하기">
+			<form className={styles.wrapper} onSubmit={handleSubmit(onSubmit)}>
+				<Input
+					placeholder="코드를 입력하세요"
+					inputMode="text"
+					type="text"
+					className={styles.input}
+					onClickClearButton={() => setValue("code", "", { shouldDirty: true })}
+					{...register("code")}
+				/>
+				<TextPrimaryButton type="submit" size="medium" disabled={!isDirty || isSubmitting}>
+					접속
+				</TextPrimaryButton>
+			</form>
+		</Section>
 	);
 };
 

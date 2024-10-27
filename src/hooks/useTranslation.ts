@@ -71,7 +71,7 @@ const useTranslation = (callback: TranslationCallback): ReturnUseTranslation => 
 
 				socket.current.connect();
 
-				intervalRef.current = setInterval(() => sendVideo(video), 1000);
+				intervalRef.current = setInterval(() => sendVideo(video), 200);
 
 				socket.current.on("response", callback);
 			} catch (error) {

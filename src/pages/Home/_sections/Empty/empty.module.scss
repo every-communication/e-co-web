@@ -1,0 +1,11 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex;
+	flex: 1;
+	width: 100%;
+	background-color: var(--c-background-normal-normal);
+	border: 1px solid var(--c-line-normal-normal);
+	border-radius: 4px;
+}

@@ -85,6 +85,7 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 					audio: true,
 				});
 				localStream.current = localMediaStream;
+				el.playsInline = true;
 				el.srcObject = localStream.current;
 				el.autoplay = true;
 				el.muted = true;

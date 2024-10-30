@@ -18,23 +18,23 @@ class VideoTelegraphySocket {
 		this.#userId = userId;
 	}
 
-	createRoom() {
+	emitCreateRoom() {
 		this.emitEvent({ type: "createRoom" });
 	}
 
-	getRoomList() {
+	emitGetRoomList() {
 		this.emitEvent({ type: "getRooms" });
 	}
 
-	joinRoom() {
+	emitJoinRoom() {
 		this.emitEvent({ type: "joinRoom", room: this.#room });
 	}
 
-	leaveRoom() {
+	emitLeaveRoom() {
 		this.emitEvent({ type: "leaveRoom", room: this.#room });
 	}
 
-	sendTranslation(message: string) {
+	emitSendTranslation(message: string) {
 		this.emitEvent({ type: "translation", message, room: this.#room });
 	}
 
@@ -132,7 +132,7 @@ class VideoTelegraphySocket {
 		}
 	}
 
-	emitEvent<T extends VideoTelegraphyClientEvents>(data: VideoTelegraphyClientEventData<T>) {
+	private emitEvent<T extends VideoTelegraphyClientEvents>(data: VideoTelegraphyClientEventData<T>) {
 		if (!this.checkIsWebSocketOpen()) return;
 		this.webSocket?.send(JSON.stringify({ ...data, userId: this.#userId }));
 	}

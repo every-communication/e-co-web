@@ -51,24 +51,24 @@ export const useVideoTelegraphySocket = (room: string): ReturnUseVideoTelegraphy
 	const [connectState, setConnectState] = useState<SocketConnectState>("CLOSED");
 
 	const getRoomList = useCallback(() => {
-		videoTelegraphy.getRoomList();
+		videoTelegraphy.emitGetRoomList();
 	}, [videoTelegraphy]);
 
 	const createRoom = useCallback(() => {
-		videoTelegraphy.createRoom();
+		videoTelegraphy.emitCreateRoom();
 	}, [videoTelegraphy]);
 
 	const joinRoom = useCallback(() => {
-		videoTelegraphy.joinRoom();
+		videoTelegraphy.emitJoinRoom();
 	}, [videoTelegraphy]);
 
 	const leaveRoom = useCallback(() => {
-		videoTelegraphy.leaveRoom();
+		videoTelegraphy.emitLeaveRoom();
 	}, [videoTelegraphy]);
 
 	const sendTranslation = useCallback(
 		(message: string) => {
-			videoTelegraphy.sendTranslation(message);
+			videoTelegraphy.emitSendTranslation(message);
 		},
 		[videoTelegraphy],
 	);

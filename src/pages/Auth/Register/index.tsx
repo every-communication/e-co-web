@@ -14,13 +14,13 @@ import HeightFitLayout from "@/components/Layout/HeightFitLayout";
 import UserTypeChecker from "@/components/User/UserTypeChecker";
 import { useToast } from "@/hooks";
 import { useSignUpMutation } from "@/queries/auth/mutations";
+import { useUploadImageMutation } from "@/queries/images/mutations";
 import { getKyHTTPError, isKyHTTPError } from "@/services/apiClient";
 
 import { registerSchema, RegisterSchema } from "./validator";
 
 import styles from "./registerPage.module.scss";
 
-// TODO: S3 처리 후 이미지 업로드 기능 만들면 썸네일 업로드 추가할 것
 const RegisterPage: React.FC = () => {
 	const { addToast } = useToast();
 	const navigate = useNavigate();
@@ -37,6 +37,7 @@ const RegisterPage: React.FC = () => {
 	});
 
 	const { mutateAsync: signUp } = useSignUpMutation();
+	const { mutateAsync: uploadImage } = useUploadImageMutation();
 
 	const onClickClear: MouseEventHandler<HTMLButtonElement> = (e) => {
 		const name = e.currentTarget.name as keyof RegisterSchema;
@@ -45,13 +46,25 @@ const RegisterPage: React.FC = () => {
 
 	const onDrop = (files: File[]) => {
 		if (files.length !== 1) return;
-		const file = files[0];
-		return URL.createObjectURL(file);
+		return files[0];
+	};
+
+	const handleUploadImage = async (file?: File) => {
+		if (!file) return;
+		const formData = new FormData();
+		formData.append("image", file);
+		return await uploadImage(formData);
 	};
 
 	const onSubmit: SubmitHandler<RegisterSchema> = async (data) => {
 		try {
-			const { data: resultMessage } = await signUp(data);
+			const { thumbnailFile, ...rest } = data;
+			const imageResponse = await handleUploadImage(thumbnailFile);
+
+			const { data: resultMessage } = await signUp({
+				...rest,
+				thumbnail: imageResponse ? imageResponse.imageUrl : null,
+			});
 			addToast({ state: "positive", message: resultMessage });
 			navigate({
 				to: "/auth/register-complete",
@@ -79,7 +92,7 @@ const RegisterPage: React.FC = () => {
 				</div>
 				<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 					<Controller
-						name="thumbnail"
+						name="thumbnailFile"
 						control={control}
 						render={({ field: { value, onChange } }) => (
 							<Dropzone
@@ -90,7 +103,7 @@ const RegisterPage: React.FC = () => {
 									accept: { "image/png": [], "image/jpeg": [] },
 								}}
 							>
-								<Avatar size={100} src={value} hasEdit />
+								<Avatar size={100} src={value ? URL.createObjectURL(value) : null} hasEdit />
 							</Dropzone>
 						)}
 					/>

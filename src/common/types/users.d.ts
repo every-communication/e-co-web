@@ -9,7 +9,7 @@ export interface UserInfoDTO {
 	id: number;
 	email: string;
 	nickname: string;
-	thumbnail: string;
+	thumbnail: string | null;
 	/** DEAF: 농인 / NONDEAF: 청인 */
 	userType: UserType;
 	socialType: SocialType;

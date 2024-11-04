@@ -27,7 +27,7 @@ const DefaultLNB: React.FC = () => {
 	return (
 		<aside className={styles.wrapper} ref={asideRef}>
 			<section className={styles.userInfoWrapper}>
-				<Avatar size={80} />
+				<Avatar size={80} src={me.thumbnail} />
 				<div className={styles.info}>
 					<h2 className={styles.name}>{me.nickname}</h2>
 					<address className={styles.email}>{me.email}</address>

@@ -15,4 +15,4 @@ export interface UserInfoDTO {
 	socialType: SocialType;
 }
 
-export interface UpdateMeDTO extends Pick<UserInfoDTO, "nickname"> {}
+export interface UpdateMeDTO extends Pick<UserInfoDTO, "nickname" | "thumbnail" | "userType"> {}

@@ -19,7 +19,7 @@ interface ReturnUseMe {
 
 const useMe = (): ReturnUseMe => {
 	const queryClient = useQueryClient();
-	const { data, refetch, isLoading, isSuccess, isError } = useGetMeQuery();
+	const { data, refetch, isLoading, isSuccess, isFetched, isError } = useGetMeQuery();
 	const { me, isLogined, setMe, clear } = useMeStore();
 
 	const refetchMe = useCallback(async () => {
@@ -33,9 +33,9 @@ const useMe = (): ReturnUseMe => {
 	}, [clear, queryClient]);
 
 	useEffect(() => {
-		if (isError) clear();
-		if (isSuccess) setMe(data.data);
-	}, [setMe, isSuccess, isError, clear, data]);
+		if (isFetched && isError) clear();
+		if (isFetched && isSuccess) setMe(data.data);
+	}, [setMe, isSuccess, isError, clear, data, isFetched]);
 
 	return {
 		me: me as UserInfoDTO,

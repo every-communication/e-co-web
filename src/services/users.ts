@@ -1,5 +1,5 @@
 import type { ApiResponseDTO } from "@/common/types/common";
-import type { UserInfoDTO } from "@/common/types/users";
+import type { UpdateMeDTO, UserInfoDTO } from "@/common/types/users";
 
 import { authApiClient } from "./apiClient";
 
@@ -7,4 +7,5 @@ import { authApiClient } from "./apiClient";
 export const getMeApi = () => authApiClient.get<ApiResponseDTO<UserInfoDTO>>("users/me").json();
 
 /** 본인 정보 수정 */
-export const updateMeApi = () => authApiClient.put<ApiResponseDTO<UserInfoDTO>>("users/me").json();
+export const updateMeApi = (json: UpdateMeDTO) =>
+	authApiClient.put<ApiResponseDTO<UserInfoDTO>>("users/me", { json }).json();

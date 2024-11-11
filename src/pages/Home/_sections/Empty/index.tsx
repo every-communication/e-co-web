@@ -11,7 +11,7 @@ interface Props {
 const Empty: React.FC<Props> = ({ description, title }) => {
 	return (
 		<div className={styles.wrapper}>
-			<CommonEmpty icon={<IconCall />} title={title} description={description} />
+			<CommonEmpty icon={<IconCall className={styles.emptyIcon} />} title={title} description={description} />
 		</div>
 	);
 };

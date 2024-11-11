@@ -11,7 +11,7 @@ interface VideoTelegraphyProviderProps {
 }
 
 export const VideoTelegraphyProvider: React.FC<VideoTelegraphyProviderProps> = ({ children }) => {
-	const { code } = useParams({ from: "/video-telegraphy/$code" });
+	const { code } = useParams({ from: "/_after-auth/video-telegraphy/$code" });
 	const videoTelegraphySocket = useVideoTelegraphySocket(code);
 
 	return <VideoTelegraphyContext.Provider value={videoTelegraphySocket}>{children}</VideoTelegraphyContext.Provider>;

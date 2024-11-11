@@ -1,5 +1,5 @@
 import type { ApiResponseDTO } from "@/common/types/common";
-import type { RoomDTO, UpdateRoomMediaDTO } from "@/common/types/videoTelegraphy";
+import type { RoomDTO, RoomHistoryDTO, UpdateRoomMediaDTO } from "@/common/types/videoTelegraphy";
 
 import { authApiClient } from "./apiClient";
 
@@ -22,3 +22,6 @@ export const leaveRoomApi = (code: string) => authApiClient.post<ApiResponseDTO<
 /** 상태 변경 */
 export const updateRoomMediaApi = ({ code, ...params }: UpdateRoomMediaDTO) =>
 	authApiClient.put<ApiResponseDTO<RoomDTO>>(`rooms/media/${code}`, { searchParams: params }).json();
+
+/** 최근 통화 목록 */
+export const getRoomHistoriesApi = () => authApiClient.get<ApiResponseDTO<RoomHistoryDTO[]>>("rooms/history").json();

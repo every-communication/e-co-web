@@ -13,7 +13,7 @@ interface Props {
 
 const RoomValidateProvider: React.FC<Props> = ({ children }) => {
 	const navigate = useNavigate();
-	const { code } = useParams({ from: "/video-telegraphy/$code" });
+	const { code } = useParams({ from: "/_after-auth/video-telegraphy/$code" });
 
 	const { addToast } = useToast();
 

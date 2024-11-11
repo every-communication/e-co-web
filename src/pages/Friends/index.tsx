@@ -10,7 +10,7 @@ import TabBar from "./TabBar";
 import styles from "./friendsPage.module.scss";
 
 const FriendsPage: React.FC = () => {
-	const { tab } = useSearch({ from: "/friends" });
+	const { tab } = useSearch({ from: "/_after-auth/friends" });
 
 	return (
 		<main className={styles.wrapper}>

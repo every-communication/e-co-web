@@ -19,7 +19,12 @@ const Empty: React.FC = () => {
 				description="새로운 친구를 추가하여 시작해보세요."
 				icon={<IconFriend className={styles.friendIcon} />}
 				cta={
-					<SolidPrimaryButton size="large" className={styles.cta} onClick={() => setIsShowSearchModal(true)}>
+					<SolidPrimaryButton
+						size="large"
+						type="button"
+						className={styles.cta}
+						onClick={() => setIsShowSearchModal(true)}
+					>
 						<IconPlus className={styles.plus} />
 						친구 추가하기
 					</SolidPrimaryButton>

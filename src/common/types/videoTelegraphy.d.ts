@@ -18,3 +18,10 @@ export interface UpdateRoomMediaDTO {
 	mic: boolean;
 	cam: boolean;
 }
+
+export interface RoomHistoryDTO {
+	friendId: number;
+	friendEmail: string;
+	createdAt: Date;
+	durationInSeconds: number;
+}

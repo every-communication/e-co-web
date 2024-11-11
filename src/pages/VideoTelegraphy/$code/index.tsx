@@ -18,7 +18,7 @@ import { ServerTranslatedData } from "@/utils/videoTelegraphy/types";
 import styles from "./videoTelegraphyPage.module.scss";
 
 const VideoTelegraphyPage: React.FC = () => {
-	const { code } = useParams({ from: "/video-telegraphy/$code" });
+	const { code } = useParams({ from: "/_after-auth/video-telegraphy/$code" });
 	const navigate = useNavigate();
 
 	const [translated, setTranslated] = useState<string>("");

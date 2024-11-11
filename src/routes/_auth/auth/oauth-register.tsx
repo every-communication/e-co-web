@@ -11,7 +11,7 @@ const schema = z.object({
 
 const OAuthRegisterPage = lazy(() => import("@/pages/Auth/OAuthRegister"));
 
-export const Route = createFileRoute("/auth/oauth-register")({
+export const Route = createFileRoute("/_auth/auth/oauth-register")({
 	component: () => <OAuthRegisterPage />,
 	validateSearch: schema.parse,
 });

@@ -12,7 +12,7 @@ const schema = z.object({
 	userType: z.enum(["DEAF", "NONDEAF", EMPTY_QUERY_STRING_VALUE]).catch(EMPTY_QUERY_STRING_VALUE),
 });
 
-export const Route = createFileRoute("/auth/register-complete")({
+export const Route = createFileRoute("/_auth/auth/register-complete")({
 	component: () => <RegisterCompletePage />,
 	validateSearch: schema.parse,
 });

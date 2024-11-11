@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 
 import { Navigate } from "@tanstack/react-router";
 
@@ -11,7 +11,11 @@ interface Props {
 }
 
 const AfterAuthorizedLayout: React.FC<Props> = ({ children }) => {
-	const { isLoading, isLogined } = useMe();
+	const { isLoading, isLogined, refetchMe } = useMe();
+
+	useEffect(() => {
+		refetchMe();
+	}, [refetchMe]);
 
 	if (isLoading) return <Loading view />;
 	if (!isLogined) return <Navigate to="/auth" replace />;

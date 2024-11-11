@@ -13,7 +13,7 @@ const schema = z.object({
 
 const FriendsPage = lazy(() => import("@/pages/Friends"));
 
-export const Route = createFileRoute("/friends")({
+export const Route = createFileRoute("/_after-auth/friends")({
 	component: () => (
 		<DefaultLayout>
 			<Suspense fallback={<Loading view />}>

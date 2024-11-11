@@ -7,7 +7,6 @@ import cx from "clsx";
 
 import { IconCamera, IconCopy, IconMic, IconPhoneOff } from "@/assets/icons/videoTelegraphy";
 import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
-import AfterAuthorizedLayout from "@/components/Layout/Authorization/AfterAuthorizedLayout";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
 import { useToast } from "@/hooks";
 import useElementSize from "@/hooks/useElementSize";
@@ -133,32 +132,30 @@ const VideoTelegraphyPage: React.FC = () => {
 	]);
 
 	return (
-		<AfterAuthorizedLayout>
-			<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>
-				<button type="button" className={styles.copy} onClick={copyCode}>
-					CODE {code}
-					<IconCopy />
-				</button>
-				{translated && userCount === 2 && (
-					<div className={styles.translated} style={translatedStyle}>
-						{translated}
-					</div>
-				)}
-				<video ref={localVideo} className={styles.localVideo} />
-				<video ref={remoteVideo} className={styles.remoteVideo} />
-				<div className={styles.menu}>
-					<button type="button" aria-label="toggle mic" className={styles.enabled}>
-						<IconMic />
-					</button>
-					<button type="button" aria-label="end call" className={styles.endCall} onClick={onClickEndCall}>
-						<IconPhoneOff />
-					</button>
-					<button type="button" aria-label="toggle camera" className={styles.enabled}>
-						<IconCamera />
-					</button>
+		<HeightFitLayout className={cx(styles.wrapper, { [styles.allParticipated]: userCount === 2 })}>
+			<button type="button" className={styles.copy} onClick={copyCode}>
+				CODE {code}
+				<IconCopy />
+			</button>
+			{translated && userCount === 2 && (
+				<div className={styles.translated} style={translatedStyle}>
+					{translated}
 				</div>
-			</HeightFitLayout>
-		</AfterAuthorizedLayout>
+			)}
+			<video ref={localVideo} className={styles.localVideo} />
+			<video ref={remoteVideo} className={styles.remoteVideo} />
+			<div className={styles.menu}>
+				<button type="button" aria-label="toggle mic" className={styles.enabled}>
+					<IconMic />
+				</button>
+				<button type="button" aria-label="end call" className={styles.endCall} onClick={onClickEndCall}>
+					<IconPhoneOff />
+				</button>
+				<button type="button" aria-label="toggle camera" className={styles.enabled}>
+					<IconCamera />
+				</button>
+			</div>
+		</HeightFitLayout>
 	);
 };
 

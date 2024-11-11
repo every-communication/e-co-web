@@ -22,14 +22,14 @@ const DefaultLayout: React.FC<Props> = ({ children }) => {
 	}, [height]);
 
 	return (
-		<AfterAuthorizedLayout>
+		<>
 			<div className={styles.wrapper} ref={layoutRef}>
 				<DefaultHeader />
 				<DefaultLNB />
 				<div className={styles.content}>{children}</div>
 			</div>
 			<DefaultBottomNavigator />
-		</AfterAuthorizedLayout>
+		</>
 	);
 };
 

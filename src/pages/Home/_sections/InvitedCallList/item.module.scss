@@ -1,0 +1,39 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	@include m.flex(flex-start, center, column);
+	gap: 12px;
+	width: 100%;
+	padding: 20px;
+	border-bottom: 1px solid var(--c-line-normal-normal);
+
+	.info {
+		@include m.flex(flex-start, center, column);
+	}
+
+	.nickname {
+		@include m.fontBody2Normal("bold");
+		width: 100%;
+		color: var(--c-static-black);
+		text-align: center;
+	}
+
+	.email {
+		@include m.fontCaption1("regular");
+		color: var(--c-label-alternative);
+	}
+
+	.buttonWrapper {
+		@include m.flex;
+		gap: 40px;
+
+		.call {
+			background-color: var(--c-status-positive);
+		}
+
+		.reject {
+			background-color: var(--c-status-negative);
+		}
+	}
+}

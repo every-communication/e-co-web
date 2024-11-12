@@ -18,15 +18,7 @@
 		object-fit: contain;
 	}
 
-	.alarmButton {
-		padding: 4px;
-	}
-
 	@include m.mobileOnly {
 		height: c.$S_DEFAULT_HEADER_MOBILE_HEIGHT;
-
-		.alarmButton {
-			transform: scale(0.8);
-		}
 	}
 }

@@ -3,7 +3,29 @@
 
 .wrapper {
 	.contentWrapper {
+		@include m.flex(flex-start, flex-start, column);
 		min-height: 70vh;
 		padding: 16px;
+
+		.content {
+			@include m.flex(flex-start, flex-start, column);
+			flex: 1;
+
+			.form {
+				@include m.flex(flex-start, center, column);
+				flex: 1;
+				gap: 12px;
+				width: 100%;
+				padding-top: 60px;
+
+				.input {
+					width: 100%;
+				}
+
+				.button {
+					margin-top: auto;
+				}
+			}
+		}
 	}
 }

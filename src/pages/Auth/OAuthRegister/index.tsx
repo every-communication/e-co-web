@@ -23,7 +23,7 @@ import { oauthRegisterSchema, type OAuthRegisterSchema } from "./validator";
 import styles from "./OAuthRegisterPage.module.scss";
 
 const OAuthRegisterPage: React.FC = () => {
-	const search = useSearch({ from: "/auth/oauth-register" });
+	const search = useSearch({ from: "/_auth/auth/oauth-register" });
 
 	const { addToast } = useToast();
 	const navigate = useNavigate();

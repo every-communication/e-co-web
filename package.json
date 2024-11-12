@@ -1,7 +1,7 @@
 {
 	"name": "e-co-web",
 	"private": true,
-	"version": "1.0.6",
+	"version": "1.0.30",
 	"type": "module",
 	"engines": {
 		"node": "20.13.1"

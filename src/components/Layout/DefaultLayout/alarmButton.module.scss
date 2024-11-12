@@ -1,0 +1,10 @@
+@use "src/styles/constants" as c;
+@use "src/styles/mixins" as m;
+
+.wrapper {
+	padding: 4px;
+
+	@include m.mobileOnly {
+		transform: scale(0.8);
+	}
+}

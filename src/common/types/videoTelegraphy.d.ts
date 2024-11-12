@@ -1,3 +1,5 @@
+export type NotificationType = "";
+
 export interface RoomDTO {
 	id: number;
 	code: string;
@@ -27,4 +29,14 @@ export interface RoomHistoryDTO {
 	friendName: string;
 	friendOrNot: boolean;
 	friendThumbnail: string | null;
+}
+
+export interface VideoNotificationDTO {
+	title: string;
+	message: string;
+	roomCode: string;
+	notificationId: string;
+	requestUserEmail: string;
+	timestamp: Date;
+	notificationType: string;
 }

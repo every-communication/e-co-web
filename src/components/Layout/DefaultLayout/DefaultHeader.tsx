@@ -3,11 +3,14 @@ import { Link } from "@tanstack/react-router";
 import { IconAlarm } from "@/assets/icons/common";
 import { imageLogo } from "@/assets/images";
 import IconButton from "@/components/Common/Button/IconButton";
+import { useSSE } from "@/hooks/useSSE";
 import { getNotificationsApi } from "@/services/notifications";
 
 import styles from "./defaultHeader.module.scss";
 
 const DefaultHeader: React.FC = () => {
+	useSSE("/sse/subscribe");
+
 	const onClick = async () => {
 		console.log("hi");
 		await getNotificationsApi();

@@ -8,7 +8,7 @@ import { useMe } from "@/hooks";
 import { setTokens } from "@/utils/token";
 
 const OAuthCallbackPage: React.FC = () => {
-	const { accessToken, refreshToken } = useSearch({ from: "/_auth/auth/oauth-callback" });
+	const { accessToken, refreshToken } = useSearch({ from: "/auth/oauth-callback" });
 
 	const { refetchMe } = useMe();
 

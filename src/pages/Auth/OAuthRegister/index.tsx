@@ -8,6 +8,7 @@ import { IconChevronLeft } from "@/assets/icons/common";
 import Avatar from "@/components/Common/Avatar";
 import IconButton from "@/components/Common/Button/IconButton";
 import SolidPrimaryButton from "@/components/Common/Button/SolidPrimaryButton";
+import Dropzone from "@/components/Common/Dropzone";
 import Input from "@/components/Common/Input";
 import LabelValue from "@/components/Common/LabelValue";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
@@ -15,6 +16,7 @@ import QueryValidChecker from "@/components/QueryValidChecker";
 import UserTypeChecker from "@/components/User/UserTypeChecker";
 import { useToast } from "@/hooks";
 import { useOAuthRegisterMutation } from "@/queries/auth/mutations";
+import { useUploadImageMutation } from "@/queries/images/mutations";
 import { getKyHTTPError, isKyHTTPError } from "@/services/apiClient";
 
 import OAuthValidChecker from "./OAuthIdValidChecker";
@@ -23,7 +25,7 @@ import { oauthRegisterSchema, type OAuthRegisterSchema } from "./validator";
 import styles from "./OAuthRegisterPage.module.scss";
 
 const OAuthRegisterPage: React.FC = () => {
-	const search = useSearch({ from: "/_auth/auth/oauth-register" });
+	const search = useSearch({ from: "/auth/oauth-register" });
 
 	const { addToast } = useToast();
 	const navigate = useNavigate();
@@ -40,15 +42,35 @@ const OAuthRegisterPage: React.FC = () => {
 	});
 
 	const { mutateAsync: oauthRegister } = useOAuthRegisterMutation();
+	const { mutateAsync: uploadImage } = useUploadImageMutation();
 
 	const onClickClear: MouseEventHandler<HTMLButtonElement> = (e) => {
 		const name = e.currentTarget.name as keyof OAuthRegisterSchema;
 		setValue(name, "", { shouldValidate: true });
 	};
 
+	const onDrop = (files: File[]) => {
+		if (files.length !== 1) return;
+		return files[0];
+	};
+
+	const handleUploadImage = async (file?: File) => {
+		if (!file) return;
+		const formData = new FormData();
+		formData.append("image", file);
+		return await uploadImage(formData);
+	};
+
 	const onSubmit: SubmitHandler<OAuthRegisterSchema> = async (data) => {
 		try {
-			const { data: resultMessage } = await oauthRegister({ id: search.id, ...data });
+			const { thumbnailFile, ...rest } = data;
+			const imageResponse = await handleUploadImage(thumbnailFile);
+
+			const { data: resultMessage } = await oauthRegister({
+				id: search.id,
+				...rest,
+				thumbnail: imageResponse ? imageResponse.imageUrl : search.thumbnail || null,
+			});
 			addToast({ state: "positive", message: resultMessage });
 			navigate({ to: "/auth/register-complete", replace: true, search: data });
 		} catch (err) {
@@ -73,7 +95,22 @@ const OAuthRegisterPage: React.FC = () => {
 							</Link>
 						</div>
 						<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-							<Avatar size={100} />
+							<Controller
+								name="thumbnailFile"
+								control={control}
+								render={({ field: { value, onChange } }) => (
+									<Dropzone
+										options={{
+											onDrop: (files) => onChange(onDrop(files)),
+											multiple: false,
+											noDragEventsBubbling: true,
+											accept: { "image/png": [], "image/jpeg": [] },
+										}}
+									>
+										<Avatar size={100} src={value ? URL.createObjectURL(value) : search.thumbnail} hasEdit />
+									</Dropzone>
+								)}
+							/>
 							<LabelValue label="이메일">{search.id}</LabelValue>
 							<Input
 								label="닉네임"

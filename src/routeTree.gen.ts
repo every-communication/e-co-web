@@ -13,29 +13,39 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth/route'
 import { Route as AfterAuthRouteImport } from './routes/_after-auth/route'
+import { Route as AuthRegisterCompleteImport } from './routes/auth/register-complete'
+import { Route as AuthOauthRegisterImport } from './routes/auth/oauth-register'
+import { Route as AuthOauthCallbackImport } from './routes/auth/oauth-callback'
 import { Route as AfterAuthFriendsImport } from './routes/_after-auth/friends'
-import { Route as AuthAuthRouteImport } from './routes/_auth/auth/route'
-import { Route as AuthAuthRegisterCompleteImport } from './routes/_auth/auth/register-complete'
-import { Route as AuthAuthOauthRegisterImport } from './routes/_auth/auth/oauth-register'
-import { Route as AuthAuthOauthCallbackImport } from './routes/_auth/auth/oauth-callback'
 
 // Create Virtual Routes
 
+const AuthIndexLazyImport = createFileRoute('/auth/')()
 const AfterAuthIndexLazyImport = createFileRoute('/_after-auth/')()
+const AuthRegisterLazyImport = createFileRoute('/auth/register')()
 const AfterAuthMyPageLazyImport = createFileRoute('/_after-auth/my-page')()
-const AuthAuthIndexLazyImport = createFileRoute('/_auth/auth/')()
-const AuthAuthRegisterLazyImport = createFileRoute('/_auth/auth/register')()
 const AfterAuthVideoTelegraphyCodeLazyImport = createFileRoute(
   '/_after-auth/video-telegraphy/$code',
 )()
 
 // Create/Update Routes
 
+const AuthRouteRoute = AuthRouteImport.update({
+  path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AfterAuthRouteRoute = AfterAuthRouteImport.update({
   id: '/_after-auth',
   getParentRoute: () => rootRoute,
 } as any)
+
+const AuthIndexLazyRoute = AuthIndexLazyImport.update({
+  path: '/',
+  getParentRoute: () => AuthRouteRoute,
+} as any).lazy(() => import('./routes/auth/index.lazy').then((d) => d.Route))
 
 const AfterAuthIndexLazyRoute = AfterAuthIndexLazyImport.update({
   path: '/',
@@ -44,6 +54,11 @@ const AfterAuthIndexLazyRoute = AfterAuthIndexLazyImport.update({
   import('./routes/_after-auth/index.lazy').then((d) => d.Route),
 )
 
+const AuthRegisterLazyRoute = AuthRegisterLazyImport.update({
+  path: '/register',
+  getParentRoute: () => AuthRouteRoute,
+} as any).lazy(() => import('./routes/auth/register.lazy').then((d) => d.Route))
+
 const AfterAuthMyPageLazyRoute = AfterAuthMyPageLazyImport.update({
   path: '/my-page',
   getParentRoute: () => AfterAuthRouteRoute,
@@ -51,29 +66,25 @@ const AfterAuthMyPageLazyRoute = AfterAuthMyPageLazyImport.update({
   import('./routes/_after-auth/my-page.lazy').then((d) => d.Route),
 )
 
+const AuthRegisterCompleteRoute = AuthRegisterCompleteImport.update({
+  path: '/register-complete',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthOauthRegisterRoute = AuthOauthRegisterImport.update({
+  path: '/oauth-register',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthOauthCallbackRoute = AuthOauthCallbackImport.update({
+  path: '/oauth-callback',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
 const AfterAuthFriendsRoute = AfterAuthFriendsImport.update({
   path: '/friends',
   getParentRoute: () => AfterAuthRouteRoute,
 } as any)
-
-const AuthAuthRouteRoute = AuthAuthRouteImport.update({
-  path: '/auth',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AuthAuthIndexLazyRoute = AuthAuthIndexLazyImport.update({
-  path: '/',
-  getParentRoute: () => AuthAuthRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_auth/auth/index.lazy').then((d) => d.Route),
-)
-
-const AuthAuthRegisterLazyRoute = AuthAuthRegisterLazyImport.update({
-  path: '/register',
-  getParentRoute: () => AuthAuthRouteRoute,
-} as any).lazy(() =>
-  import('./routes/_auth/auth/register.lazy').then((d) => d.Route),
-)
 
 const AfterAuthVideoTelegraphyCodeLazyRoute =
   AfterAuthVideoTelegraphyCodeLazyImport.update({
@@ -84,21 +95,6 @@ const AfterAuthVideoTelegraphyCodeLazyRoute =
       (d) => d.Route,
     ),
   )
-
-const AuthAuthRegisterCompleteRoute = AuthAuthRegisterCompleteImport.update({
-  path: '/register-complete',
-  getParentRoute: () => AuthAuthRouteRoute,
-} as any)
-
-const AuthAuthOauthRegisterRoute = AuthAuthOauthRegisterImport.update({
-  path: '/oauth-register',
-  getParentRoute: () => AuthAuthRouteRoute,
-} as any)
-
-const AuthAuthOauthCallbackRoute = AuthAuthOauthCallbackImport.update({
-  path: '/oauth-callback',
-  getParentRoute: () => AuthAuthRouteRoute,
-} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -111,11 +107,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfterAuthRouteImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/auth': {
-      id: '/_auth/auth'
+    '/auth': {
+      id: '/auth'
       path: '/auth'
       fullPath: '/auth'
-      preLoaderRoute: typeof AuthAuthRouteImport
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRoute
     }
     '/_after-auth/friends': {
@@ -125,12 +121,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfterAuthFriendsImport
       parentRoute: typeof AfterAuthRouteImport
     }
+    '/auth/oauth-callback': {
+      id: '/auth/oauth-callback'
+      path: '/oauth-callback'
+      fullPath: '/auth/oauth-callback'
+      preLoaderRoute: typeof AuthOauthCallbackImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/auth/oauth-register': {
+      id: '/auth/oauth-register'
+      path: '/oauth-register'
+      fullPath: '/auth/oauth-register'
+      preLoaderRoute: typeof AuthOauthRegisterImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/auth/register-complete': {
+      id: '/auth/register-complete'
+      path: '/register-complete'
+      fullPath: '/auth/register-complete'
+      preLoaderRoute: typeof AuthRegisterCompleteImport
+      parentRoute: typeof AuthRouteImport
+    }
     '/_after-auth/my-page': {
       id: '/_after-auth/my-page'
       path: '/my-page'
       fullPath: '/my-page'
       preLoaderRoute: typeof AfterAuthMyPageLazyImport
       parentRoute: typeof AfterAuthRouteImport
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterLazyImport
+      parentRoute: typeof AuthRouteImport
     }
     '/_after-auth/': {
       id: '/_after-auth/'
@@ -139,26 +163,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AfterAuthIndexLazyImport
       parentRoute: typeof AfterAuthRouteImport
     }
-    '/_auth/auth/oauth-callback': {
-      id: '/_auth/auth/oauth-callback'
-      path: '/oauth-callback'
-      fullPath: '/auth/oauth-callback'
-      preLoaderRoute: typeof AuthAuthOauthCallbackImport
-      parentRoute: typeof AuthAuthRouteImport
-    }
-    '/_auth/auth/oauth-register': {
-      id: '/_auth/auth/oauth-register'
-      path: '/oauth-register'
-      fullPath: '/auth/oauth-register'
-      preLoaderRoute: typeof AuthAuthOauthRegisterImport
-      parentRoute: typeof AuthAuthRouteImport
-    }
-    '/_auth/auth/register-complete': {
-      id: '/_auth/auth/register-complete'
-      path: '/register-complete'
-      fullPath: '/auth/register-complete'
-      preLoaderRoute: typeof AuthAuthRegisterCompleteImport
-      parentRoute: typeof AuthAuthRouteImport
+    '/auth/': {
+      id: '/auth/'
+      path: '/'
+      fullPath: '/auth/'
+      preLoaderRoute: typeof AuthIndexLazyImport
+      parentRoute: typeof AuthRouteImport
     }
     '/_after-auth/video-telegraphy/$code': {
       id: '/_after-auth/video-telegraphy/$code'
@@ -166,20 +176,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/video-telegraphy/$code'
       preLoaderRoute: typeof AfterAuthVideoTelegraphyCodeLazyImport
       parentRoute: typeof AfterAuthRouteImport
-    }
-    '/_auth/auth/register': {
-      id: '/_auth/auth/register'
-      path: '/register'
-      fullPath: '/auth/register'
-      preLoaderRoute: typeof AuthAuthRegisterLazyImport
-      parentRoute: typeof AuthAuthRouteImport
-    }
-    '/_auth/auth/': {
-      id: '/_auth/auth/'
-      path: '/'
-      fullPath: '/auth/'
-      preLoaderRoute: typeof AuthAuthIndexLazyImport
-      parentRoute: typeof AuthAuthRouteImport
     }
   }
 }
@@ -193,12 +189,12 @@ export const routeTree = rootRoute.addChildren({
     AfterAuthIndexLazyRoute,
     AfterAuthVideoTelegraphyCodeLazyRoute,
   }),
-  AuthAuthRouteRoute: AuthAuthRouteRoute.addChildren({
-    AuthAuthOauthCallbackRoute,
-    AuthAuthOauthRegisterRoute,
-    AuthAuthRegisterCompleteRoute,
-    AuthAuthRegisterLazyRoute,
-    AuthAuthIndexLazyRoute,
+  AuthRouteRoute: AuthRouteRoute.addChildren({
+    AuthOauthCallbackRoute,
+    AuthOauthRegisterRoute,
+    AuthRegisterCompleteRoute,
+    AuthRegisterLazyRoute,
+    AuthIndexLazyRoute,
   }),
 })
 
@@ -211,7 +207,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "__root.tsx",
       "children": [
         "/_after-auth",
-        "/_auth/auth"
+        "/auth"
       ]
     },
     "/_after-auth": {
@@ -223,51 +219,51 @@ export const routeTree = rootRoute.addChildren({
         "/_after-auth/video-telegraphy/$code"
       ]
     },
-    "/_auth/auth": {
-      "filePath": "_auth/auth/route.tsx",
+    "/auth": {
+      "filePath": "auth/route.tsx",
       "children": [
-        "/_auth/auth/oauth-callback",
-        "/_auth/auth/oauth-register",
-        "/_auth/auth/register-complete",
-        "/_auth/auth/register",
-        "/_auth/auth/"
+        "/auth/oauth-callback",
+        "/auth/oauth-register",
+        "/auth/register-complete",
+        "/auth/register",
+        "/auth/"
       ]
     },
     "/_after-auth/friends": {
       "filePath": "_after-auth/friends.tsx",
       "parent": "/_after-auth"
     },
+    "/auth/oauth-callback": {
+      "filePath": "auth/oauth-callback.tsx",
+      "parent": "/auth"
+    },
+    "/auth/oauth-register": {
+      "filePath": "auth/oauth-register.tsx",
+      "parent": "/auth"
+    },
+    "/auth/register-complete": {
+      "filePath": "auth/register-complete.tsx",
+      "parent": "/auth"
+    },
     "/_after-auth/my-page": {
       "filePath": "_after-auth/my-page.lazy.tsx",
       "parent": "/_after-auth"
+    },
+    "/auth/register": {
+      "filePath": "auth/register.lazy.tsx",
+      "parent": "/auth"
     },
     "/_after-auth/": {
       "filePath": "_after-auth/index.lazy.tsx",
       "parent": "/_after-auth"
     },
-    "/_auth/auth/oauth-callback": {
-      "filePath": "_auth/auth/oauth-callback.tsx",
-      "parent": "/_auth/auth"
-    },
-    "/_auth/auth/oauth-register": {
-      "filePath": "_auth/auth/oauth-register.tsx",
-      "parent": "/_auth/auth"
-    },
-    "/_auth/auth/register-complete": {
-      "filePath": "_auth/auth/register-complete.tsx",
-      "parent": "/_auth/auth"
+    "/auth/": {
+      "filePath": "auth/index.lazy.tsx",
+      "parent": "/auth"
     },
     "/_after-auth/video-telegraphy/$code": {
       "filePath": "_after-auth/video-telegraphy.$code.lazy.tsx",
       "parent": "/_after-auth"
-    },
-    "/_auth/auth/register": {
-      "filePath": "_auth/auth/register.lazy.tsx",
-      "parent": "/_auth/auth"
-    },
-    "/_auth/auth/": {
-      "filePath": "_auth/auth/index.lazy.tsx",
-      "parent": "/_auth/auth"
     }
   }
 }

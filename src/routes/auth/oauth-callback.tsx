@@ -12,7 +12,7 @@ const schema = z.object({
 
 const OAuthCallbackPage = lazy(() => import("@/pages/Auth/OAuthCallback"));
 
-export const Route = createFileRoute("/_auth/auth/oauth-callback")({
+export const Route = createFileRoute("/auth/oauth-callback")({
 	component: () => <OAuthCallbackPage />,
 	validateSearch: schema.parse,
 });

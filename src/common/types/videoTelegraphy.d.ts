@@ -35,8 +35,10 @@ export interface VideoNotificationDTO {
 	title: string;
 	message: string;
 	roomCode: string;
-	notificationId: string;
+	notificationId: number;
 	requestUserEmail: string;
+	requestUserName: string;
+	requestUserThumbnail: string;
 	timestamp: Date;
 	notificationType: string;
 }

@@ -11,7 +11,7 @@ export const createRoomApi = () => authApiClient.post<ApiResponseDTO<RoomDTO>>("
 
 /** 친구 초대 + 방 생성 */
 export const createRoomWithInviteApi = (friendId: number) =>
-	authApiClient.post<ApiResponseDTO<RoomDTO>>(`/rooms/${friendId}`).json();
+	authApiClient.post<ApiResponseDTO<RoomDTO>>(`rooms/${friendId}`).json();
 
 /** 방 초대 */
 export const inviteRoomApi = (friendId: string) =>

@@ -1,12 +1,13 @@
 import dayjs from "dayjs";
-import duration from "dayjs/plugin/duration";
 
-dayjs.extend(duration);
+export const formatDuration = (duration: number) => {
+	const hours = Math.floor(duration / 3600);
+	const minutes = Math.floor((duration % 3600) / 60);
+	const seconds = duration % 60;
 
-export const formatDuration = (isoDuration: string | null) => {
-	if (!isoDuration) return "00분 00초";
-	const seconds = parseFloat(isoDuration.replace(/[PT]|S/g, ""));
-	const duration = dayjs.duration(seconds, "seconds");
-
-	return seconds >= 3600 ? duration.format("HH시간 mm분 ss초") : duration.format("mm분 ss초");
+	if (hours > 0) return `${hours}시간 ${minutes}분 ${seconds}초`;
+	if (minutes > 0) return `${minutes}분 ${seconds}초`;
+	return `${seconds}초`;
 };
+
+export { dayjs };

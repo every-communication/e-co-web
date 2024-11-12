@@ -1,10 +1,13 @@
 import Skeleton from "react-loading-skeleton";
 
+import { useNavigate } from "@tanstack/react-router";
+
 import type { RoomHistoryDTO } from "@/common/types/videoTelegraphy";
 import Avatar from "@/components/Common/Avatar";
 import TextPrimaryButton from "@/components/Common/Button/TextPrimaryButton";
 import FriendTag from "@/components/Friend/Tag";
 import { useCreateRoomWithInviteMutation } from "@/queries/videoTelegraphy/mutations";
+import { dayjs, formatDuration } from "@/utils/date";
 
 import styles from "./item.module.scss";
 
@@ -13,10 +16,13 @@ interface Props {
 }
 
 const Item: React.FC<Props> = ({ history }) => {
+	const navigate = useNavigate();
+
 	const { mutateAsync: createRoomWithInvite } = useCreateRoomWithInviteMutation();
 
 	const onCall = async () => {
-		// const { } = await createRoomWithInvite(history.friend)
+		const { code } = (await createRoomWithInvite(history.friendId)).data;
+		navigate({ to: `/video-telegraphy/$code`, params: { code } });
 	};
 
 	return (
@@ -28,14 +34,10 @@ const Item: React.FC<Props> = ({ history }) => {
 					<FriendTag friendType={history.friendOrNot ? "FRIEND" : "DEFAULT"} />
 				</p>
 				<address className={styles.email}>{history.friendEmail}</address>
-				<time className={styles.duration}>
-					통화시간: {}시간{}분{}초
-				</time>
-				<time className={styles.duration}>
-					통화시간: {}시간{}분{}초
-				</time>
+				<time className={styles.duration}>통화시간: {formatDuration(history.duration)}</time>
+				<time className={styles.duration}>{dayjs(history.deletedAt).format("YYYY년 MM월 DD일 HH:mm:ss")}</time>
 			</div>
-			<TextPrimaryButton type="button" size="medium">
+			<TextPrimaryButton type="button" size="medium" onClick={onCall}>
 				통화하기
 			</TextPrimaryButton>
 		</li>

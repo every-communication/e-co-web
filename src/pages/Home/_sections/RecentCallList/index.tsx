@@ -16,7 +16,7 @@ const RecentCallList: React.FC = () => {
 			{histories.length > 0 && (
 				<ul className={styles.wrapper}>
 					{histories.map((history) => (
-						<Item history={history} key={`${history.callTime}-${history.friendEmail}-${history.totalCallTime}`} />
+						<Item history={history} key={`${history.deletedAt.toString()}-${history.friendEmail}`} />
 					))}
 				</ul>
 			)}

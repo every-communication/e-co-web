@@ -1,12 +1,12 @@
 import ky, { type HTTPError } from "ky";
 
 import { UNAUTHORIZED_MESSAGE, UNAUTHORIZED_STATUS } from "@/common/constants/auth";
-import { LOGOUT_EVENT_NAME, NO_TOKEN_EVENT_NAME } from "@/common/constants/events";
+import { LOGOUT_EVENT_NAME, NO_TOKEN_EVENT_NAME, TOKEN_REFRESH_EVENT_NAME } from "@/common/constants/events";
 import type { TokenDTO } from "@/common/types/auth";
 import type { ApiResponseDTO, ErrorDTO } from "@/common/types/common";
 import config from "@/config";
 import { PromiseHolder } from "@/utils/promiseHolder";
-import { getTokens, removeTokens, setTokens } from "@/utils/token";
+import { getBearerToken, getTokens, removeTokens, setTokens } from "@/utils/token";
 
 const promiseHolder = new PromiseHolder();
 
@@ -48,8 +48,9 @@ export const authApiClient = apiClient.extend({
 								if (refreshMessage === UNAUTHORIZED_MESSAGE) throw new Error();
 								const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshData;
 								setTokens({ accessToken: newAccessToken, refreshToken: newRefreshToken });
+								window.dispatchEvent(new CustomEvent(TOKEN_REFRESH_EVENT_NAME));
 
-								error.request.headers.set("Authorization", `Bearer ${newAccessToken}`);
+								error.request.headers.set("Authorization", getBearerToken(newAccessToken));
 								promiseHolder.successRelease();
 							} else await promiseHolder.promise;
 

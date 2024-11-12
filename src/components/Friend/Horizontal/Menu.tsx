@@ -7,6 +7,7 @@ import {
 	useRemoveRequestFriendMutation,
 	useRequestFriendMutation,
 } from "@/queries/friends/mutations";
+import { useCreateRoomWithInviteMutation } from "@/queries/videoTelegraphy/mutations";
 
 import styles from "./menu.module.scss";
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const Menu: React.FC<Props> = ({ friendType, friendId }) => {
+	const { mutateAsync: createRoomWithInvite } = useCreateRoomWithInviteMutation();
 	const { mutateAsync: deleteFriend } = useDeleteFriendMutation(friendId);
 	const { mutateAsync: removeRequestFriend } = useRemoveRequestFriendMutation(friendId);
 	const { mutateAsync: receivedFriendApprove } = useReceivedFriendApproveMutation(friendId);
@@ -30,9 +32,14 @@ const Menu: React.FC<Props> = ({ friendType, friendId }) => {
 				</TextPrimaryButton>
 			)}
 			{friendType === "FRIEND" && (
-				<TextPrimaryButton type="button" size="small" className={styles.negative} onClick={() => deleteFriend()}>
-					친구 끊기
-				</TextPrimaryButton>
+				<>
+					<TextPrimaryButton type="button" size="small" onClick={() => createRoomWithInvite(friendId)}>
+						통화하기
+					</TextPrimaryButton>
+					<TextPrimaryButton type="button" size="small" className={styles.negative} onClick={() => deleteFriend()}>
+						친구 끊기
+					</TextPrimaryButton>
+				</>
 			)}
 			{friendType === "REQUESTED" && (
 				<TextPrimaryButton

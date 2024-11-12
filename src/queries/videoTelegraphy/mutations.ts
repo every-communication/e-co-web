@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 
 import { useToast } from "@/hooks";
 import {
@@ -31,10 +32,14 @@ export const useCreateRoomMutation = () => {
 
 /** 친구 초대 + 방 생성 */
 export const useCreateRoomWithInviteMutation = () => {
+	const navigate = useNavigate();
 	const { addToast } = useToast();
 
 	return useMutation({
 		mutationFn: createRoomWithInviteApi,
+		onSuccess: (data) => {
+			navigate({ to: `/video-telegraphy/$code`, params: { code: data.data.code } });
+		},
 		onError: () => {
 			addToast({ state: "negative", message: "상대와의 방 생성에 실패했습니다." });
 		},

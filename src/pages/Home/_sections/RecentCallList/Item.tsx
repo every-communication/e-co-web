@@ -16,14 +16,7 @@ interface Props {
 }
 
 const Item: React.FC<Props> = ({ history }) => {
-	const navigate = useNavigate();
-
 	const { mutateAsync: createRoomWithInvite } = useCreateRoomWithInviteMutation();
-
-	const onCall = async () => {
-		const { code } = (await createRoomWithInvite(history.friendId)).data;
-		navigate({ to: `/video-telegraphy/$code`, params: { code } });
-	};
 
 	return (
 		<li className={styles.wrapper}>
@@ -37,7 +30,7 @@ const Item: React.FC<Props> = ({ history }) => {
 				<time className={styles.duration}>통화시간: {formatDuration(history.duration)}</time>
 				<time className={styles.duration}>{dayjs(history.deletedAt).format("YYYY년 MM월 DD일 HH:mm:ss")}</time>
 			</div>
-			<TextPrimaryButton type="button" size="medium" onClick={onCall}>
+			<TextPrimaryButton type="button" size="medium" onClick={() => createRoomWithInvite(history.friendId)}>
 				통화하기
 			</TextPrimaryButton>
 		</li>

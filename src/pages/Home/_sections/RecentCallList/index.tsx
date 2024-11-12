@@ -13,11 +13,13 @@ const RecentCallList: React.FC = () => {
 
 	return (
 		<Section title="최근 통화 목록" isFlexHeight>
-			<ul className={styles.wrapper}>
-				{histories.map((history) => (
-					<Item history={history} key={`${history.callTime}-${history.friendEmail}-${history.totalCallTime}`} />
-				))}
-			</ul>
+			{histories.length > 0 && (
+				<ul className={styles.wrapper}>
+					{histories.map((history) => (
+						<Item history={history} key={`${history.callTime}-${history.friendEmail}-${history.totalCallTime}`} />
+					))}
+				</ul>
+			)}
 			{histories.length === 0 && (
 				<Empty title="최근 통화 목록이 없어요" description="방을 생성해서 통화를 시작해보세요" />
 			)}

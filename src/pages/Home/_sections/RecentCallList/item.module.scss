@@ -3,7 +3,43 @@
 
 .wrapper {
 	@include m.flex(flex-start);
+	gap: 20px;
 	width: 100%;
 	padding: 12px;
 	border-bottom: 1px solid var(--c-line-normal-normal);
+
+	.info {
+		@include m.flex(flex-start, flex-start, column);
+		flex: 1;
+		gap: 2px;
+		overflow: hidden;
+
+		.nameWrapper {
+			@include m.flex(flex-start);
+			gap: 10px;
+			width: 100%;
+
+			@include m.mobileOnly {
+				gap: 4px;
+			}
+
+			.nickname {
+				@include m.fontBody2Normal("bold");
+				@include m.makeEllipsis;
+				color: var(--c-label-normal);
+			}
+		}
+
+		.email {
+			@include m.fontCaption1("regular");
+			@include m.makeEllipsis;
+			width: 100%;
+			color: var(--c-label-alternative);
+		}
+
+		.duration {
+			@include m.fontCaption2("regular");
+			color: var(--c-line-normal-strong);
+		}
+	}
 }

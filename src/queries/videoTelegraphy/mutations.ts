@@ -1,7 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useToast } from "@/hooks";
-import { createRoomApi, getRoomApi, joinRoomApi, leaveRoomApi } from "@/services/videoTelegraphy";
+import {
+	createRoomApi,
+	createRoomWithInviteApi,
+	getRoomApi,
+	joinRoomApi,
+	leaveRoomApi,
+} from "@/services/videoTelegraphy";
 
 import { queries } from "..";
 
@@ -19,6 +25,18 @@ export const useCreateRoomMutation = () => {
 		mutationFn: createRoomApi,
 		onError: () => {
 			addToast({ state: "negative", message: "방 생성에 실패했습니다." });
+		},
+	});
+};
+
+/** 친구 초대 + 방 생성 */
+export const useCreateRoomWithInviteMutation = () => {
+	const { addToast } = useToast();
+
+	return useMutation({
+		mutationFn: createRoomWithInviteApi,
+		onError: () => {
+			addToast({ state: "negative", message: "상대와의 방 생성에 실패했습니다." });
 		},
 	});
 };

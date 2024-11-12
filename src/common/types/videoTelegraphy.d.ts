@@ -20,8 +20,10 @@ export interface UpdateRoomMediaDTO {
 }
 
 export interface RoomHistoryDTO {
-	friendId: number;
+	callTime: string;
 	friendEmail: string;
-	createdAt: Date;
-	durationInSeconds: number;
+	friendName: string;
+	friendOrNot: boolean;
+	friendThumbnail: string | null;
+	totalCallTime: string;
 }

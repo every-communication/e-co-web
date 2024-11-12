@@ -9,6 +9,10 @@ export const getRoomApi = (code: string) => authApiClient.get<ApiResponseDTO<Roo
 /** 방 생성 */
 export const createRoomApi = () => authApiClient.post<ApiResponseDTO<RoomDTO>>("rooms").json();
 
+/** 친구 초대 + 방 생성 */
+export const createRoomWithInviteApi = (friendId: number) =>
+	authApiClient.post<ApiResponseDTO<RoomDTO>>(`/rooms/${friendId}`).json();
+
 /** 방 초대 */
 export const inviteRoomApi = (friendId: string) =>
 	authApiClient.post<ApiResponseDTO<RoomDTO>>(`rooms/invite/${friendId}`).json();
@@ -24,4 +28,4 @@ export const updateRoomMediaApi = ({ code, ...params }: UpdateRoomMediaDTO) =>
 	authApiClient.put<ApiResponseDTO<RoomDTO>>(`rooms/media/${code}`, { searchParams: params }).json();
 
 /** 최근 통화 목록 */
-export const getRoomHistoriesApi = () => authApiClient.get<ApiResponseDTO<RoomHistoryDTO[]>>("rooms/history").json();
+export const getRoomHistoriesApi = () => authApiClient.get<ApiResponseDTO<RoomHistoryDTO[]>>("rooms/histories").json();

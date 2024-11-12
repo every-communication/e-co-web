@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "@tanstack/react-router";
 
 import Loading from "@/components/Common/Loading/Loading";
 import { VideoTelegraphyProvider } from "@/contexts/videoTelegraphy/VideoTelegraphyContext";
-import { useToast } from "@/hooks";
+import { useMe, useToast } from "@/hooks";
 import { useGetRoomQuery } from "@/queries/videoTelegraphy/queries";
 
 interface Props {
@@ -13,11 +13,12 @@ interface Props {
 
 const RoomValidateProvider: React.FC<Props> = ({ children }) => {
 	const navigate = useNavigate();
+	const { me } = useMe();
 	const { code } = useParams({ from: "/_after-auth/video-telegraphy/$code" });
 
 	const { addToast } = useToast();
 
-	const { isLoading, isError } = useGetRoomQuery(code);
+	const { isLoading, isError, data, isSuccess } = useGetRoomQuery(code);
 
 	const handleError = useCallback(() => {
 		if (!isError) return;
@@ -25,9 +26,22 @@ const RoomValidateProvider: React.FC<Props> = ({ children }) => {
 		navigate({ to: "/", replace: true });
 	}, [addToast, isError, navigate]);
 
+	const handleCheckRoomJoinable = useCallback(() => {
+		if (!isSuccess || !data) return;
+		const { ownerId, friendId } = data.data;
+		if (Boolean(ownerId) && Boolean(friendId) && ![ownerId, friendId].includes(me.id)) {
+			addToast({ message: "참여할 수 없는 방입니다.", state: "negative" });
+			navigate({ to: "/", replace: true });
+		}
+	}, [addToast, data, isSuccess, me.id, navigate]);
+
 	useEffect(() => {
 		handleError();
 	}, [handleError]);
+
+	useEffect(() => {
+		handleCheckRoomJoinable();
+	}, [handleCheckRoomJoinable]);
 
 	if (isLoading || isError) return <Loading view />;
 

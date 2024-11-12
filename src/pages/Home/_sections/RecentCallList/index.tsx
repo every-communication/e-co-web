@@ -1,6 +1,8 @@
+import { range } from "lodash-es";
+
 import { useGetRoomHistoriesSuspenseQuery } from "@/queries/videoTelegraphy/queries";
 
-import Item from "./Item";
+import Item, { LoadingItem } from "./Item";
 import Empty from "../Empty";
 import Section from "../Section";
 
@@ -13,7 +15,7 @@ const RecentCallList: React.FC = () => {
 		<Section title="최근 통화 목록" isFlexHeight>
 			<ul className={styles.wrapper}>
 				{histories.map((history) => (
-					<Item key={`${history.createdAt.toString()}-${history.friendId}`} />
+					<Item history={history} key={`${history.callTime}-${history.friendEmail}-${history.totalCallTime}`} />
 				))}
 			</ul>
 			{histories.length === 0 && (
@@ -24,3 +26,13 @@ const RecentCallList: React.FC = () => {
 };
 
 export default RecentCallList;
+
+export const LoadingRecentCallList: React.FC = () => {
+	return (
+		<Section title="최근 통화 목록" isFlexHeight>
+			{range(5).map((value) => (
+				<LoadingItem key={value} />
+			))}
+		</Section>
+	);
+};

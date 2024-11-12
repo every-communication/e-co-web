@@ -34,3 +34,7 @@ export const removeTokens = () => {
 	localStorage.removeItem(STORAGE_ACCESS_TOKEN_KEY);
 	localStorage.removeItem(STORAGE_REFRESH_TOKEN_KEY);
 };
+
+export const getBearerToken = (token: string) => {
+	return `Bearer ${token}`;
+};

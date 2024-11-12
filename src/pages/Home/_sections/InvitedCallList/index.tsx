@@ -1,9 +1,13 @@
+import { useGetRequestedVideoTelegraphyNotificationsSuspenseQuery } from "@/queries/notifications/queries";
+
 import Empty from "../Empty";
 import Section from "../Section";
 
 import styles from "./invitedCallList.module.scss";
 
 const InvitedCallList: React.FC = () => {
+	const { data } = useGetRequestedVideoTelegraphyNotificationsSuspenseQuery();
+
 	return (
 		<Section title="초대 목록 0건" isFlexHeight>
 			{/* <ul className={styles.wrapper}></ul> */}

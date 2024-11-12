@@ -11,7 +11,7 @@ interface Props {
 }
 
 const OAuthValidChecker: React.FC<Props> = ({ children }) => {
-	const { id } = useSearch({ from: "/auth/oauth-register" });
+	const { id } = useSearch({ from: "/_auth/auth/oauth-register" });
 	const navigate = useNavigate();
 
 	const { addToast } = useToast();

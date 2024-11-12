@@ -10,7 +10,7 @@ import QueryValidChecker from "@/components/QueryValidChecker";
 import styles from "./registerCompletePage.module.scss";
 
 const RegisterCompletePage: React.FC = () => {
-	const { nickname, userType } = useSearch({ from: "/auth/register-complete" });
+	const { nickname, userType } = useSearch({ from: "/_auth/auth/register-complete" });
 
 	return (
 		<QueryValidChecker search={{ nickname, userType }} redirectTo="/auth">

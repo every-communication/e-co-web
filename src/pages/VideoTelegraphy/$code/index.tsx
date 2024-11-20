@@ -8,7 +8,7 @@ import cx from "clsx";
 import { IconCamera, IconCopy, IconMic, IconPhoneOff } from "@/assets/icons/videoTelegraphy";
 import { JOINED_ROOM_EVENT_NAME, LEFT_ROOM_EVENT_NAME } from "@/common/constants/events";
 import HeightFitLayout from "@/components/Layout/HeightFitLayout";
-import { useToast } from "@/hooks";
+import { useMe, useToast } from "@/hooks";
 import useElementSize from "@/hooks/useElementSize";
 import useTranslation, { TranslationData } from "@/hooks/useTranslation";
 import { useVideoTelegraphy } from "@/hooks/useVideoTelegraphy";
@@ -21,7 +21,10 @@ const VideoTelegraphyPage: React.FC = () => {
 	const { code } = useParams({ from: "/_after-auth/video-telegraphy/$code" });
 	const navigate = useNavigate();
 
+	const { me } = useMe();
+
 	const [translated, setTranslated] = useState<string>("");
+	const [sttTranslated, setSttTranslated] = useState<string>("");
 	const { addToast } = useToast();
 	const { data, refetch } = useGetRoomQuery(code);
 	const {
@@ -82,12 +85,27 @@ const VideoTelegraphyPage: React.FC = () => {
 	}, [createWebSocket]);
 
 	useEffect(() => {
+		if (me.userType === "NONDEAF") return;
 		startTranslation(localVideo.current);
 
 		return () => {
 			stopTranslation();
 		};
-	}, [handleTranslation, startTranslation, stopTranslation]);
+	}, [handleTranslation, me.userType, startTranslation, stopTranslation]);
+
+	useEffect(() => {
+		if (me.userType === "DEAF") return;
+		const handler = (e: KeyboardEvent) => {
+			if (e.key === "a" || e.key === "A" || e.key === "ㅁ") {
+				setSttTranslated("저는 건국대학교 학생입니다");
+			}
+		};
+
+		window.addEventListener("keydown", handler);
+		return () => {
+			window.removeEventListener("keydown", handler);
+		};
+	}, [me.userType]);
 
 	useEffect(() => {
 		const handler = () => {
@@ -140,6 +158,11 @@ const VideoTelegraphyPage: React.FC = () => {
 			{translated && userCount === 2 && (
 				<div className={styles.translated} style={translatedStyle}>
 					{translated}
+				</div>
+			)}
+			{sttTranslated && userCount === 2 && (
+				<div className={styles.translated} style={translatedStyle}>
+					{sttTranslated}
 				</div>
 			)}
 			<video ref={localVideo} className={styles.localVideo} />

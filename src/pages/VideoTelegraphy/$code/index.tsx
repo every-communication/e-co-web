@@ -94,7 +94,7 @@ const VideoTelegraphyPage: React.FC = () => {
 	}, [handleTranslation, me.userType, startTranslation, stopTranslation]);
 
 	useEffect(() => {
-		if (me.userType === "DEAF") return;
+		if (me.userType === "NONDEAF") return;
 		const handler = (e: KeyboardEvent) => {
 			if (e.key === "a" || e.key === "A" || e.key === "ㅁ") {
 				setSttTranslated("저는 건국대학교 학생입니다");
@@ -160,7 +160,7 @@ const VideoTelegraphyPage: React.FC = () => {
 					{translated}
 				</div>
 			)}
-			{sttTranslated && userCount === 2 && (
+			{sttTranslated && (
 				<div className={styles.translated} style={translatedStyle}>
 					{sttTranslated}
 				</div>
